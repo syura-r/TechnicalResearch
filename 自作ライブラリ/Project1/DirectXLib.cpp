@@ -408,7 +408,7 @@ void DirectXLib::ReRenderTarget()
 void DirectXLib::ComputeBegin()
 {
 	auto ComputeWrapperPtr = ComputeWrapper::GetInstance();
-	
+	ComputeWrapperPtr->AsyncComputeThreadProc();
 	//InterlockedExchange(&ComputeWrapperPtr->m_threadFenceValue,fenceVal[bbIndex]);
 
 	UINT64 threadFenceValue = InterlockedGetValue(&ComputeWrapperPtr->m_threadFenceValue);

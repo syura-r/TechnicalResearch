@@ -36,15 +36,15 @@ void ComputeWrapper::Initialize()
     //m_threadData[threadIndex].pContext = this;
     //m_threadData[threadIndex].threadIndex = threadIndex;
 
-    threadHandle = CreateThread(
-        nullptr,
-        0,
-        reinterpret_cast<LPTHREAD_START_ROUTINE>(ThreadProc),
-        reinterpret_cast<void*>(this),
-        CREATE_SUSPENDED,
-        nullptr);
+    //threadHandle = CreateThread(
+    //    nullptr,
+    //    0,
+    //    reinterpret_cast<LPTHREAD_START_ROUTINE>(ThreadProc),
+    //    reinterpret_cast<void*>(this),
+    //    CREATE_SUSPENDED,
+    //    nullptr);
 
-    ResumeThread(threadHandle);
+    //ResumeThread(threadHandle);
 
 
     //Create();
@@ -52,11 +52,11 @@ void ComputeWrapper::Initialize()
 
 void ComputeWrapper::End()
 {
-    InterlockedExchange(&m_terminating, 1);
-    WaitForMultipleObjects(1, &threadHandle, TRUE, INFINITE);
+    //InterlockedExchange(&m_terminating, 1);
+    //WaitForMultipleObjects(1, &threadHandle, TRUE, INFINITE);
 
-    CloseHandle(threadHandle);
-    CloseHandle(fenceEvent);
+    //CloseHandle(threadHandle);
+    //CloseHandle(fenceEvent);
 
 }
 
@@ -80,15 +80,15 @@ void ComputeWrapper::End()
 //
 //}
 
-DWORD ComputeWrapper::AsyncComputeThreadProc()
+void ComputeWrapper::AsyncComputeThreadProc()
 {
     ID3D12CommandQueue* pCommandQueue = cmdQueue.Get();
     ID3D12CommandAllocator* pCommandAllocator = cmdAllocator.Get();
     ID3D12GraphicsCommandList* pCommandList = cmdList.Get();
     ID3D12Fence* pFence = fence.Get();
 
-    while (0 == InterlockedGetValue(&m_terminating))
-    {
+    //while (0 == InterlockedGetValue(&m_terminating))
+    //{
         // Run the particle simulation.
         if (shades.size() != 0)
             shades[0]->Dispatch();
@@ -129,7 +129,7 @@ DWORD ComputeWrapper::AsyncComputeThreadProc()
         result = pCommandList->Reset(pCommandAllocator, ComputeShade::GetPipeline());
         assert(SUCCEEDED(result));
 
-    }
+    //}
 
-    return 0;
+    //return 0;
 }

@@ -20,11 +20,11 @@ private:
 	ComputeWrapper& operator=(const ComputeWrapper&) = delete;
 
 	//void Create();
-	static DWORD WINAPI ThreadProc(ComputeWrapper* data)
-	{
-		return data->AsyncComputeThreadProc();
-	}
-	DWORD AsyncComputeThreadProc();
+	//static DWORD WINAPI ThreadProc(ComputeWrapper* data)
+	//{
+	//	return data->AsyncComputeThreadProc();
+	//}
+	void AsyncComputeThreadProc();
 	std::vector<ComputeShade*> shades;
 private:
 	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> cmdAllocator;
