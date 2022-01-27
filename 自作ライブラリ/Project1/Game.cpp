@@ -296,7 +296,7 @@ void Game::LoadFinish()
 	
 	mainResource = new TextureResource("mainTex");
 	TextureResource::SetMainResource(mainResource);
-	shadowMap = new TextureResource("shadowMap",{1920*2,1080*2}, DXGI_FORMAT_R32_FLOAT,{0,0,0,0});
+	shadowMap = new TextureResource("shadowMap",{1920,1080}, DXGI_FORMAT_R32_FLOAT,{0,0,0,0});
 	normalResource = new TextureResource("normalTex");
 	ssaoResource = new TextureResource("SSAO", { 1920,1080 }, DXGI_FORMAT_R32_FLOAT,{1,0,0,0});
 	ssao = new SSAO();
@@ -401,7 +401,7 @@ void Game::Run()
 			directX->ComputeBegin();
 			//2.画面クリアコマンドここまで
 			Object3D::SetDrawShadow(true);
-			shadowMap->PreDraw(1,0,0,1920*2,1080*2,0,0,1920*2,1080*2);
+			shadowMap->PreDraw();
 			directX->ImguiDraw();
 			sceneManeger->PreDraw();
 			//directX->DepthClear();

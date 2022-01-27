@@ -62,6 +62,13 @@ SSAO::SSAO()
 	constMap->mat = XMMatrixIdentity();
 	constMap->color = { 1,1,1,1 };
 	constBuff->Unmap(0, nullptr);
+	XMFLOAT4 normals[trycnt];
+	for (int i = 0; i < trycnt; i++)
+	{
+		Vector3 randNormal = Vector3{ (float)rand() - rand(),(float)rand() - rand(),(float)rand() - rand() }.Normalize();
+		normals[i] = { randNormal.x,randNormal.y,randNormal.z,0 };
+
+	}
 	for (int i = 0; i < 3; i++)
 	{
 		//定数バッファの作成
@@ -78,12 +85,7 @@ SSAO::SSAO()
 		ConstBuffer2* constMap2 = nullptr;
 		result = constBuff2[i]->Map(0, nullptr, (void**)&constMap2);
 		assert(SUCCEEDED(result));
-
-		for (int i = 0; i < trycnt; i++)
-		{
-			Vector3 randNormal = Vector3{ (float)rand() - rand(),(float)rand() - rand(),(float)rand() - rand() }.Normalize();
-			constMap2->randNormal[i] = { randNormal.x,randNormal.y,randNormal.z,0 };
-		}
+		memcpy(constMap2->randNormal, normals,sizeof(XMFLOAT4)*trycnt);
 		constBuff2[i]->Unmap(0, nullptr);
 	}
 

@@ -36,31 +36,32 @@ float PSmain(VSOutput input) : SV_Target
     const float radius = 0.05f;
 
 
-    float4 vBilinearWeights[4] =
-    {
-                //0     //1 
-        float4( 9/16, 3/16, 3/16, 1/16), //0
-	    float4( 3/16, 9/16, 1/16, 3/16), //1
-	    float4( 3/16, 1/16, 9/16, 3/16), //2
-	    float4( 1/16, 3/16, 3/16, 9/16), //3
+    //float4 vBilinearWeights[4] =
+    //{
+    //            //0   //1  //2    //3
+    //    float4( 9/16, 3/16, 3/16, 1/16), //0
+	   // float4( 3/16, 9/16, 1/16, 3/16), //1
+	   // float4( 3/16, 1/16, 9/16, 3/16), //2
+	   // float4( 1/16, 3/16, 3/16, 9/16), //3
     	
-    };
-	
-    for (int i = 0; i < trycnt; ++i)
+    //};
+	if(dp<1.0f)
     {
+        for (int i = 0; i < trycnt; ++i)
+        {
 
-        float3 omega = randNormal[i].xyz;
+            float3 omega = randNormal[i].xyz;
 
-        float dt = dot(norm, omega);
-        float sgn = sign(dt);
-        omega *= sgn;
-        float4 rpos = mul(proj, mul(view, float4(respos.xyz + omega * radius, 1)));
-        rpos.xyz /= rpos.w;
-        ao += step(depthtex.Sample(smp, (rpos.xy + float2(1, -1)) * float2(0.5, -0.5)), rpos.z) * dt * sgn;
+            float dt = dot(norm, omega);
+            float sgn = sign(dt);
+            omega *= sgn;
+            float4 rpos = mul(proj, mul(view, float4(respos.xyz + omega * radius, 1)));
+            rpos.xyz /= rpos.w;
+            ao += step(depthtex.Sample(smp, (rpos.xy + float2(1, -1)) * float2(0.5, -0.5)), rpos.z) * dt * sgn;
 
+        }
+        ao /= (float) trycnt;
     }
-    ao /= (float) trycnt;
-
-    float resultAo = lerp(ao,0, step( 1,dp));
-    return 1.0f - resultAo;
+    //float resultAo = lerp(ao,0, step( 1,dp));
+    return 1.0f - ao;
 }
