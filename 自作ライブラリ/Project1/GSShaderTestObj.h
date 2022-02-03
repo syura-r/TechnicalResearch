@@ -37,24 +37,5 @@ protected:
 	static ComPtr<ID3D12Resource> constBuff[3]; // 定数バッファ
 	static ConstBuffData sendData;
 	static ComPtr<ID3D12Resource> constCameraBuff[3]; // 定数バッファ
-
-	//float destruction;
-	//float scaleFactor; //スケールの変化量
-	//float positionFactor;//ポジションの変化量
-	//float rotationFactor;//回転の変化量
-	//int  tessellation;//ポリゴン分割度
-	//bool onEasing;//イージングするかどうか
-	//bool onTargetBreak; //特定の位置のみ分解するかどうか
-	//Vector3 breakPoint; //分解中心点
-	//float breakRadius; //分解半径
-	//bool onCameraBreak; //特定の位置のみ分解するかどうか
-	//Vector3 targetPos; //分解中心点
-	//float capsuleRadius; //分解半径
-	//bool on4Vertex; //特定の位置のみ分解するかどうか
-
-	//bool drawBreakPointObj; //分解球を描画するか
-	//bool draw;
-	//
-	//Object* breakPointObj = nullptr;
 };
 

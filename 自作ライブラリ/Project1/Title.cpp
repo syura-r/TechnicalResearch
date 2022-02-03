@@ -3,73 +3,49 @@
 #include "DebugCamera.h"
 #include "Floor.h"
 #include "Fluorescent.h"
-#include "PtrDelete.h"
 #include "Sprite.h"
 #include "TextureResource.h"
 #include "Wall.h"
 
 Title::Title()
 {
-	camera = new DebugCamera();
+	camera = std::make_unique<DebugCamera>();
 	next = SCENE::Play;
-	lightGroup = LightGroup::Create();
+	lightGroup.reset(LightGroup::Create());
 	lights.clear();
 	for (int i = 0; i < 9; i++)
 	{
-		lights.push_back(new Fluorescent(lightPos[i]));
+		lights.push_back(std::make_unique<Fluorescent>(lightPos[i]));
 		lightGroup->SetPointLightActive(i, true);
 		lightGroup->SetPointLightPos(i, lightPos[i] + Vector3{ 0,3,0 });
 	}
-	Wall* ceiling = new Wall("ceiling");
-	Wall* backWall = new Wall("backWall");
-	Wall* leftWall = new Wall("leftWall");
-	Wall* rightWall = new Wall("rightWall");
-	Wall* frontWall = new Wall("frontWall");
-	Wall* blackBoard = new Wall("blackBoard");
+	std::unique_ptr<Wall>blackBoard = std::make_unique<Wall>("blackBoard");
 	blackBoard->SetPosition({ 0,-4.3f,0 });
 	blackBoard->Update();
-	Wall* locker = new Wall("locker");
+	walls.push_back(std::make_unique<Wall>("ceiling"));
+	walls.push_back(std::make_unique<Wall>("backWall"));
+	walls.push_back(std::make_unique<Wall>("leftWall"));
+	walls.push_back(std::make_unique<Wall>("rightWall"));
+	walls.push_back(std::make_unique<Wall>("frontWall"));
+	walls.push_back(std::move(blackBoard));
+	walls.push_back(std::make_unique<Wall>("locker"));
+	sky = std::make_unique<Sky>();
+	floor = std::make_unique<Floor>();
 
-	walls.push_back(ceiling);
-	walls.push_back(backWall);
-	walls.push_back(leftWall);
-	walls.push_back(rightWall);
-	walls.push_back(frontWall);
-	walls.push_back(blackBoard);
-	walls.push_back(locker);
-	sky = new Sky();
-	floor = new Floor();
-
-	backTex = new Sprite();
-	resource = new TextureResource("titleBackTex");
-	titleText = new TitleText();
+	backTex = std::make_unique<Sprite>();
+	resource = std::make_unique<TextureResource>("titleBackTex");
+	titleText = std::make_unique<TitleText>();
 }
 
 
 Title::~Title()
 {
-	for (auto it : walls)
-	{
-		PtrDelete(it);
-	}
-	for (auto it : lights)
-	{
-		PtrDelete(it);
-	}
-
-	PtrDelete(sky);
-	PtrDelete(camera);
-	PtrDelete(floor);
-	PtrDelete(lightGroup);
-	PtrDelete(backTex);
-	PtrDelete(resource);
-	PtrDelete(titleText);
 }
 
 void Title::Initialize()
 {
-	Object3D::SetCamera(camera);
-	Object3D::SetLightGroup(lightGroup);
+	Object3D::SetCamera(camera.get());
+	Object3D::SetLightGroup(lightGroup.get());
 	camera->SetDistance(0.1f);
 	camera->SetTarget({ 0,0,0 });
 	isEnd = false;
@@ -93,11 +69,11 @@ void Title::Update()
 	lightGroup->Update();
 	camera->AddPhi(0.0002f);
 	camera->Update();
-	for (auto it : walls)
+	for (auto& it : walls)
 	{
 		it->Update();
 	}
-	for (auto it : lights)
+	for (auto& it : lights)
 	{
 		it->Update();
 	}
@@ -109,11 +85,11 @@ void Title::Update()
 void Title::PreDraw()
 {
 	auto endit = walls.end();
-	for (auto it : walls)
+	for (auto& it : walls)
 	{
 		it->DrawReady();
 	}
-	for (auto it : lights)
+	for (auto& it : lights)
 	{
 		it->DrawReady();
 	}
@@ -127,11 +103,11 @@ void Title::PreDraw()
 	}
 
 	PipelineState::SetPipeline(walls[0]->GetPipelineName());
-	for (auto it : walls)
+	for (auto& it : walls)
 	{
 		it->Draw();
 	}
-	for (auto it : lights)
+	for (auto& it : lights)
 	{
 		it->Draw();
 	}

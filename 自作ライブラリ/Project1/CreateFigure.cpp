@@ -251,8 +251,8 @@ void CreateFigure::CreateVartex(float r, int n, XMFLOAT3 *vertices, unsigned sho
 		}
 		else
 		{
-			vertices[i].x = r * sin((XM_2PI / n) * (i + 1)) * (descHeight / descWidth);
-			vertices[i].y = r * cos((XM_2PI / n) * (i + 1));
+			vertices[i].x = r * sinf((XM_2PI / n) * (i + 1)) * (descHeight / descWidth);
+			vertices[i].y = r * cosf((XM_2PI / n) * (i + 1));
 			vertices[i].z = 0.0f;
 
 		}

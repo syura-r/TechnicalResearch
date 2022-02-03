@@ -2,7 +2,6 @@
 
 #include "Easing.h"
 #include "Object3D.h"
-#include "PtrDelete.h"
 #include "Sprite.h"
 #include "TextureResource.h"
 
@@ -20,13 +19,13 @@ void SceneManager::Add(Scene::SCENE name, Scene * scene)
 	{
 		return;
 	}
-	scenes[name] = scene;
+	scenes[name].reset(scene);
 }
 
 void SceneManager::Initialize()
 {
-	resource = new TextureResource("migrateTex",{1920,1080}, DXGI_FORMAT_R8G8B8A8_UNORM,{1,1,1,1},false);
-	migrateTex = new Sprite();
+	resource.reset(new TextureResource("migrateTex",{1920,1080}, DXGI_FORMAT_R8G8B8A8_UNORM,{1,1,1,1},false));
+	migrateTex = std::make_unique<Sprite>();
 	migrateStart = false;
 	for (int i = 0; i < 3; i++)
 	{
@@ -77,7 +76,7 @@ void SceneManager::Update()
 
 void SceneManager::Change(Scene::SCENE name)
 {
-	currentScene = scenes[name];
+	currentScene = scenes[name].get();
 	currentScene->Initialize();
 }
 
@@ -119,17 +118,4 @@ void SceneManager::PostDraw()
 		migrateTex->NoPipelineDraw("migrateTex", { 960,540 }, 0, { 1,1 }, { 1,1,1,1 }, { 0.5f, 0.5f });
 
 	}
-}
-
-void SceneManager::End()
-{
-	for (auto itr : scenes)
-	{
-		delete itr.second;
-		itr.second = nullptr;
-	}
-
-	PtrDelete(resource);
-	PtrDelete(migrateTex);
-
 }

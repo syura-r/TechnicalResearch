@@ -2,7 +2,6 @@
 
 #include "Easing.h"
 #include "Input.h"
-#include "PtrDelete.h"
 #include "Texture.h"
 #include"DirectXLib.h"
 #include "GameSettingParam.h"
@@ -23,35 +22,35 @@ bool SettingParam::onSSAO = false;
 Menu::Menu()
 {
 //スプライトの生成
-	menuUI = new Sprite();
-	backTex = new Sprite();
-	restart = new Sprite();
-	end = new Sprite();
-	setting = new Sprite();
-	yes = new Sprite();
-	no = new Sprite();
-	endCheck = new Sprite();
-	restartCheck = new Sprite();
-	sensitiveSetting = new Sprite();
-	operateSetting = new Sprite();
-	sensitiveSettingBar = new Sprite();
-	dot = new Sprite();
-	check = new Sprite();
-	check2 = new Sprite();
-	jump = new Sprite();
-	cameraReset = new Sprite();
-	action = new Sprite();
-	upsideDown = new Sprite();
-	changeRun = new Sprite();
-	flipLeftRight = new Sprite();
-	jumpOperate = new Sprite();
-	cameraResetOperate = new Sprite();
-	actionOperate = new Sprite();
-	changeRunOperate = new Sprite();
-	selectFrame = new Sprite();
-	viewCollision = new Sprite();
-	screenSetting = new Sprite();
-	sSAO = new Sprite();
+	menuUI = std::make_unique<Sprite>();
+	backTex = std::make_unique<Sprite>();
+	restart = std::make_unique<Sprite>();
+	end = std::make_unique<Sprite>();
+	setting = std::make_unique<Sprite>();
+	yes = std::make_unique<Sprite>();
+	no = std::make_unique<Sprite>();
+	endCheck = std::make_unique<Sprite>();
+	restartCheck = std::make_unique<Sprite>();
+	sensitiveSetting = std::make_unique<Sprite>();
+	operateSetting = std::make_unique<Sprite>();
+	sensitiveSettingBar = std::make_unique<Sprite>();
+	dot = std::make_unique<Sprite>();
+	check = std::make_unique<Sprite>();
+	check2 = std::make_unique<Sprite>();
+	jump = std::make_unique<Sprite>();
+	cameraReset = std::make_unique<Sprite>();
+	action = std::make_unique<Sprite>();
+	upsideDown = std::make_unique<Sprite>();
+	changeRun = std::make_unique<Sprite>();
+	flipLeftRight = std::make_unique<Sprite>();
+	jumpOperate = std::make_unique<Sprite>();
+	cameraResetOperate = std::make_unique<Sprite>();
+	actionOperate = std::make_unique<Sprite>();
+	changeRunOperate = std::make_unique<Sprite>();
+	selectFrame = std::make_unique<Sprite>();
+	viewCollision = std::make_unique<Sprite>();
+	screenSetting = std::make_unique<Sprite>();
+	sSAO = std::make_unique<Sprite>();
 	
 	//number = new Sprite();
 //操作変更用のボタンと画像名を設定
@@ -64,42 +63,7 @@ Menu::Menu()
 	operateTexNames[XINPUT_GAMEPAD_X] = "x";
 	operateTexNames[XINPUT_GAMEPAD_Y] = "y";
 //メニュー画面全体の画像とSRVの生成
-	resource = new TextureResource("Menu", { 960,540 });
-}
-Menu::~Menu()
-{
-	PtrDelete(menuUI);
-	PtrDelete(backTex);
-	PtrDelete(resource);
-	PtrDelete(restart);
-	PtrDelete(end);
-	PtrDelete(yes);
-	PtrDelete(no);
-	PtrDelete(endCheck);
-	PtrDelete(restartCheck);
-	PtrDelete(sensitiveSetting);
-	PtrDelete(setting);
-	PtrDelete(operateSetting);
-	PtrDelete(sensitiveSettingBar);
-	PtrDelete(dot);
-	PtrDelete(selectFrame);
-	PtrDelete(check);
-	PtrDelete(check2);
-	PtrDelete(jump);
-	PtrDelete(cameraReset);
-	PtrDelete(action);
-	PtrDelete(upsideDown);
-	PtrDelete(changeRun);
-	PtrDelete(flipLeftRight);
-	PtrDelete(jumpOperate);
-	PtrDelete(cameraResetOperate);
-	PtrDelete(actionOperate);
-	PtrDelete(changeRunOperate);
-	PtrDelete(viewCollision);
-	PtrDelete(screenSetting);
-	PtrDelete(sSAO);
-	//PtrDelete(number);
-
+	resource.reset(new TextureResource("Menu", { 960,540 }));
 }
 
 void Menu::Initialize()
@@ -146,7 +110,7 @@ bool Menu::Update()
 				close = true;
 				SettingParam::onSSAO = onSSAO;
 			}
-			easingScale = Easing::EaseInOutQuart(1, 0, 30, closeCounter);
+			easingScale = Easing::EaseInOutQuart(1.0f, 0.0f, 30.0f, (float)closeCounter);
 			menuUIScale = { easingScale,easingScale };
 			closeCounter++;
 		}
@@ -200,7 +164,7 @@ bool Menu::Update()
 //メニュー開いたときの拡大処理
 	else
 	{
-		easingScale = Easing::EaseInOutQuart(0, 1, 30, openCounter);
+		easingScale = Easing::EaseInOutQuart(0.0f, 1.0f, 30.0f, (float)openCounter);
 		menuUIScale = { easingScale,easingScale };
 		openCounter++;
 	}
@@ -808,11 +772,11 @@ void Menu::Migrate()
 {
 	if(migrateCounter<=30)
 	{
-		texAlpha = Easing::EaseInOutQuart(1, 0, 30, migrateCounter);
+		texAlpha = Easing::EaseInOutQuart(1.0f, 0.0f, 30.0f, (float)migrateCounter);
 	}
 	else if(migrateCounter<=60)
 	{
-		texAlpha = Easing::EaseInOutQuart(0, 1, 30, migrateCounter-30);
+		texAlpha = Easing::EaseInOutQuart(0.0f, 1.0f, 30.0f, (float)migrateCounter-30);
 	}
 	else
 	{

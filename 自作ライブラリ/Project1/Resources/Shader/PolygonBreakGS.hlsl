@@ -97,18 +97,21 @@ void GSmain(
 
     const float randPoint = abs(random(randNormal2.xy) / 2);
 
+	//ポリゴン情報を登録
     Triangle tri = TriangleInit;
     tri.p0 = input[0].worldpos.xyz;
     tri.p1 = input[1].worldpos.xyz;
     tri.p2 = input[2].worldpos.xyz;
     tri.normal = normalize(cross(input[1].worldpos.xyz - input[0].worldpos.xyz, input[2].worldpos.xyz - input[0].worldpos.xyz));
+	//カメラから注視点へのレイ情報を登録
     Ray ray = RayInit;
     ray.start = cameraPos;
     ray.dir = normalize(TargetPos - cameraPos);
     ray.dir.y = lerp(-0.0001, ray.dir.y, step(ray.dir.y, -0.0001));
-	
-    const float3 checkPos = /*(input[0].worldpos.xyz + input[1].worldpos.xyz + input[2].worldpos.xyz) / 3;*/CulcCheckPoint(ray,tri);
-	
+
+	//レイとポリゴンの最近点を計算
+    const float3 checkPos = CulcCheckPoint(ray,tri);
+	//最近点を使用し分解度を計算
     const float cameraDestruct = lerp(0, CheckInCameraTarget(checkPos), step(0.5, _OnCameraBreak));
 	
     const float destruction = clamp(0, 1, lerp(_Destruction, EaseInOutQuart(0, 1.0f, 600, 600 * smoothstep(randPoint, randPoint + 0.5f, _Destruction)), step(0.5, _OnEasing)) /** lerp(1, CheckBreakTarget(center), step(0.5, _OnTargetBreak))*/ + cameraDestruct);

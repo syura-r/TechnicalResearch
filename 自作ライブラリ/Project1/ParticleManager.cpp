@@ -4,7 +4,6 @@
 #include"DirectXLib.h"
 #include"PipelineState.h"
 #include"Texture.h"
-#include"PtrDelete.h"
 ParticleManager * ParticleManager::GetInstance()
 {
 	static ParticleManager instance;
@@ -22,8 +21,8 @@ void ParticleManager::Initialize()
 {
 	CreateConstBuff();
 	CreateModel();
-	computeShade = new ComputeShade(vertexCount);
-	ComputeWrapper::GetInstance()->AddShade(computeShade);
+	computeShade = std::make_unique<ComputeShade>(vertexCount);
+	ComputeWrapper::GetInstance()->AddShade(computeShade.get());
 }
 
 void ParticleManager::Update()
@@ -205,5 +204,4 @@ void ParticleManager::CreateModel()
 
 void ParticleManager::End()
 {
-	PtrDelete(computeShade);
 }

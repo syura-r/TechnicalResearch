@@ -23,8 +23,8 @@ XINPUT_STATE Input::prevPadState = {};
 XINPUT_VIBRATION Input::vibration = {};
 int Input::time = 0;
 
-float Input::screenHeight = 0;
-float Input::screenWidth = 0;
+int Input::screenHeight = 0;
+int Input::screenWidth = 0;
 
 bool Input::mouseMove = true;
 #define STICKMAX 32767
@@ -232,7 +232,7 @@ void Input::Update()
 	//}
 	if(!mouseMove)
 	{
-		SetCursorPos(screenWidth/2,screenHeight/2);
+		SetCursorPos(screenWidth / 2,screenHeight / 2);
 	}
 
 	//パッド情報の取得開始

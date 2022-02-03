@@ -9,7 +9,7 @@ public:
 	~Book();
 	void Update()override;
 private:
-	std::vector<BoxCollider*> colliders;
+	std::vector<std::unique_ptr<BoxCollider>> colliders;
 
 	float colliderOffset[3] =
 	{

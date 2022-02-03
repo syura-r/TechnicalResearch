@@ -12,12 +12,11 @@ Object::~Object()
 		CollisionManager::GetInstance()->RemoveCollider(collider);
 		PtrDelete(collider);
 	}
-	PtrDelete(object);
 }
 
 void Object::Create(Model * model)
 {
-	object = Object3D::Create(model, position, scale, rotation, color);
+	object.reset(Object3D::Create(model, position, scale, rotation, color));
 }
 
 void Object::Initialize()

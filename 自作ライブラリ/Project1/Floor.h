@@ -7,9 +7,8 @@ class Floor :
 {
 public:
 	Floor();
-	~Floor();
 	void Update() override;
 private:
-	std::vector<BoxCollider*> colliders;
+	std::vector<std::unique_ptr<BoxCollider>> colliders;
 };
 

@@ -35,14 +35,14 @@ private:
 	   -26.571f,19.404f,30.627f,
 	   -26.571f,19.404f,-25.783f,
 	};
-
-	DebugCamera* camera = nullptr;
-	Floor* floor = nullptr;
-	std::vector<Object*>walls;
-	Sky* sky = nullptr;
-	LightGroup* lightGroup = nullptr;
-	std::vector<Object*> lights;
-	Sprite* backTex = nullptr;
-	TextureResource* resource = nullptr;
-	TitleText* titleText = nullptr;
+	
+	std::unique_ptr<DebugCamera> camera;
+	std::unique_ptr<Floor> floor ;
+	std::vector<std::unique_ptr<Object>>walls;
+	std::unique_ptr<Sky> sky;
+	std::unique_ptr <LightGroup> lightGroup;
+	std::vector<std::unique_ptr<Object>> lights;
+	std::unique_ptr<Sprite>backTex ;
+	std::unique_ptr <TextureResource> resource ;
+	std::unique_ptr <TitleText> titleText ;
 };

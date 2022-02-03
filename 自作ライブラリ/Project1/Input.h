@@ -8,7 +8,7 @@
 
 #pragma comment(lib, "xinput.lib")
 //https://docs.microsoft.com/en-us/windows/win32/api/xinput/ns-xinput-xinput_gamepad
-static struct MouseMove
+struct MouseMove
 {
 	LONG lX;
 	LONG lY;
@@ -24,7 +24,7 @@ class Input
 private:
 template <class T> using ComPtr = Microsoft::WRL::ComPtr<T>;
 public:
-	static enum MOUSEBOTTAN
+	enum MOUSEBOTTAN
 	{
 		LEFT,
 		RIGHT,
@@ -126,8 +126,8 @@ private:
 	static XINPUT_VIBRATION vibration;
 	static int time;
 
-	static float screenWidth;
-	static float screenHeight;
+	static int screenWidth;
+	static int screenHeight;
 
 	static bool mouseMove;
 };

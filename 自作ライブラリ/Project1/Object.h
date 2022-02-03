@@ -64,7 +64,7 @@ public:
 	inline const XMFLOAT4& GetColor() { return color; }
 	inline const bool IsDead() { return dead; }
 protected:
-	Object3D* object = nullptr;
+	std::unique_ptr<Object3D> object;
 	Vector3 position = { 0,0,0 };
 	Vector3 scale = { 1,1,1 };
 	Vector3 rotation = { 0,0,0 };

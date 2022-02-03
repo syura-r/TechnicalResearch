@@ -3,7 +3,6 @@
 #include "FbxLoader.h"
 #include "Object3D.h"
 #include "Texture.h"
-#include"PtrDelete.h"
 #include "Quaternion.h"
 
 void FBXModel::CreateBuffers()

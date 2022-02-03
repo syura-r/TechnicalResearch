@@ -6,11 +6,10 @@ class Chair :
 {
 public:
 	Chair();
-	~Chair();
 	void Initialize()override;
 	void Update()override;
 private:
-	std::vector<BoxCollider*> colliders;
+	std::vector<std::unique_ptr<BoxCollider>> colliders;
 
 	float colliderOffset[8][3] = 
 	{

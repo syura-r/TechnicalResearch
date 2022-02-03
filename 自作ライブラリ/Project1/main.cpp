@@ -16,20 +16,15 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	{
 		debugController->EnableDebugLayer();
 	}
-	ConsoleWindow* consoleWindow = new ConsoleWindow();
+	std::unique_ptr<ConsoleWindow> consoleWindow(new ConsoleWindow());
 	consoleWindow->CreateConsoleWindow();
 #endif // _DEBUG
 	srand(time(nullptr));
-	Game* game = Game::GetInstance();
+	std::unique_ptr<Game> game(Game::GetInstance());
 
 	game->Initialize();
 	game->Run();
 	game->End();
-	delete game;
-
-#ifdef _DEBUG
-	delete consoleWindow;
-#endif // _DEBUG
 
 	return 0;
 }

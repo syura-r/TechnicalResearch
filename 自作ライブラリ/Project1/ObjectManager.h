@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <unordered_map>
 
 class Object;
@@ -14,14 +15,13 @@ public:
 	void DrawReady();
 	void PreDraw();
 	void PostDraw();
-	void End();
 private:
 	ObjectManager() = default;
 	ObjectManager(const ObjectManager&) = delete;
 	~ObjectManager() = default;
 	ObjectManager& operator=(const ObjectManager&) = delete;
 
-	std::unordered_map<bool,std::vector<Object*>>objects;
+	std::unordered_map<bool,std::vector<std::unique_ptr<Object>>>objects;
 	std::unordered_map<bool, std::unordered_map<std::string, std::vector<Object*>>>drawObjects;
 
 };

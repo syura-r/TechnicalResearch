@@ -6,7 +6,6 @@ class Pencil :
 {
 public:
 	Pencil(const Vector3& pos);
-	~Pencil();
 	void Initialize() override;
 	void Update() override;
 	void Draw(const bool pause);
@@ -15,7 +14,7 @@ private:
 	bool get = false;
 	bool getFlame = false;
 
-	Object* pencil = nullptr;
+	std::unique_ptr<Object> pencil;
 
 	float BasePencilPosY;
 	int pencilMoveCounter;
@@ -31,7 +30,7 @@ private:
 	};
 	float offsetTime;
 	ComPtr<ID3D12Resource> constBuff[3]; // 定数バッファ
-	BoxCollider* colliders[3];
+	std::unique_ptr <BoxCollider> colliders[3];
 
 };
 

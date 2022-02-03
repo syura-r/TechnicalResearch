@@ -5,7 +5,6 @@
 #include "CollisionManager.h"
 #include "DrawMode.h"
 #include"OBJLoader.h"
-#include "PtrDelete.h"
 #include "Texture.h"
 
 ComPtr<ID3D12Resource> GSShaderTestObj::constBuff[3] = {}; // 定数バッファ

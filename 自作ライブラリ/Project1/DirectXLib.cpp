@@ -1,6 +1,5 @@
 #include "DirectXLib.h"
 #include"window.h"
-#include"PtrDelete.h"
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx12.h>
 
@@ -390,7 +389,6 @@ void DirectXLib::End()
 
 		CloseHandle(event);
 	}
-	//PtrDelete(postEffect);
 	ImGui_ImplDX12_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();

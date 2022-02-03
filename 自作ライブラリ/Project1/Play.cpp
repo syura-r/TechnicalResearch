@@ -1,7 +1,6 @@
 #include "Play.h"
 #include <fstream>
 #include <sstream>
-#include"PtrDelete.h"
 #include"Object3D.h"
 #include"Audio.h"
 #include "Book.h"
@@ -31,27 +30,27 @@
 Play::Play()
 {
 	next = Ending;
-	camera = new DebugCamera();
-	Object3D::SetCamera(camera);
-	ParticleEmitter::Initialize(camera);
-	Player::SetDebugCamera(camera);
-	SSAO::SetCamera(camera);
+	camera = std::make_unique<DebugCamera>();
+	Object3D::SetCamera(camera.get());
+	ParticleEmitter::Initialize(camera.get());
+	Player::SetDebugCamera(camera.get());
+	SSAO::SetCamera(camera.get());
 	//ライト生成
-	lightGroup = LightGroup::Create();
+	lightGroup.reset(LightGroup::Create());
 	GSShaderTestObj::CreateConstBuff();
 	//3Dオブジェクトにライトをセット
-	Object3D::SetLightGroup(lightGroup);
+	Object3D::SetLightGroup(lightGroup.get());
 	//ライト色を設定
 	lightGroup->SetDirLightActive(0, false);
 	lightGroup->SetDirLightColor(0, XMFLOAT3(color0));
-	menu = new Menu();
+	menu = std::make_unique<Menu>();
 	collisionManager = CollisionManager::GetInstance();
 	objectManager = ObjectManager::GetInstance();
 	player = new Player();
 	objectManager->Add(player);
 	objectManager->Add(new Floor());
-	secondTimeSprite = new NumberSprite(secondTime);
-	minuteTimeSprite = new NumberSprite(minuteTime);
+	secondTimeSprite = std::make_unique<NumberSprite>(secondTime);
+	minuteTimeSprite = std::make_unique<NumberSprite>(minuteTime);
 
 	Wall* ceiling = new Wall("ceiling");
 	Wall* backWall = new Wall("backWall");
@@ -95,31 +94,27 @@ Play::Play()
 	objectManager->Add(locker);
 	objectManager->Add(new CleaningToolStorage());
 
-	//objectManager->Add(new Book());
-	//objectManager->Add(new CleaningToolStorage());
-
-	//objectManager->Add(new Wall("box"));
 	for (int i = 0; i < 9; i++)
 	{
-		lights[i] = new Fluorescent(lightPos[i]);
-		objectManager->Add(lights[i]);
+		Fluorescent* light = nullptr;
+		light = new Fluorescent(lightPos[i]);
+		objectManager->Add(light);
 		lightGroup->SetPointLightActive(i, true);
 		lightGroup->SetPointLightPos(i, lightPos[i] - Vector3{0,3,0});
 	}
 	objectManager->Add(new Sky());
-	goal = new Goal();
-	pauseBackTex = new Sprite();
-	halfPauseBackTex = new Sprite();
-	quarterPauseBackTex = new Sprite();
-	colon = new Sprite();
-	//blackTex = new Sprite();
-	resource = new TextureResource("PauseBack",{1920,1080}, DXGI_FORMAT_R8G8B8A8_UNORM,{1,1,1,1},false);
-	halfResource = new TextureResource("halfPauseBack",{960,540}, DXGI_FORMAT_R8G8B8A8_UNORM, { 1,1,1,1 }, false);
-	quarterResource = new TextureResource("quarterPauseBack",{480,270}, DXGI_FORMAT_R8G8B8A8_UNORM, { 1,1,1,1 }, false);
+	goal =  std::make_unique<Goal>();
+	pauseBackTex = std::make_unique<Sprite>();
+	halfPauseBackTex = std::make_unique<Sprite>();
+	quarterPauseBackTex = std::make_unique<Sprite>();
+	colon = std::make_unique<Sprite>();
+	resource.reset(new TextureResource("PauseBack",{1920,1080}, DXGI_FORMAT_R8G8B8A8_UNORM,{1,1,1,1},false));
+	halfResource.reset(new TextureResource("halfPauseBack",{960,540}, DXGI_FORMAT_R8G8B8A8_UNORM, { 1,1,1,1 }, false));
+	quarterResource.reset(new TextureResource("quarterPauseBack",{480,270}, DXGI_FORMAT_R8G8B8A8_UNORM, { 1,1,1,1 }, false));
 
-	result = new Result();
-	pencils[0] = new Pencil({ -5.31f,0.28f ,29.09f });
-	pencils[1] = new Pencil({ 22.79f,15.0f,-35.52f });
+	result = std::make_unique<Result>();
+	pencils[0].reset(new Pencil({ -5.31f,0.28f ,29.09f }));
+	pencils[1].reset(new Pencil({ 22.79f,15.0f,-35.52f }));
 
 //---------------------------------仮実装------------------------------------------
 	std::string filepath = "Resources/Map/Report" + std::to_string(0) + ".txt";
@@ -226,33 +221,13 @@ Play::Play()
 
 Play::~Play()
 {
-	PtrDelete(lightGroup);
-	PtrDelete(menu);
-	PtrDelete(result);
-	PtrDelete(pauseBackTex);
-	PtrDelete(halfPauseBackTex);
-	PtrDelete(quarterPauseBackTex);
-	PtrDelete(secondTimeSprite);
-	PtrDelete(minuteTimeSprite);
-	PtrDelete(resource);
-	PtrDelete(halfResource);
-	PtrDelete(quarterResource);
-	PtrDelete(goal);
-	PtrDelete(colon);
-	//PtrDelete(blackTex);
-	for (int i = 0; i < 2; i++)
-	{
-		PtrDelete(pencils[i]);
-	}
 	LevelEditor::GetInstance()->Clear();
-	objectManager->End();
-	PtrDelete(camera);
 }
 
 void Play::Initialize()
 {
-	Object3D::SetCamera(camera);
-	Object3D::SetLightGroup(lightGroup);
+	Object3D::SetCamera(camera.get());
+	Object3D::SetLightGroup(lightGroup.get());
 	for (int i = 0; i < 2; i++)
 	{
 		pencils[i]->Initialize();
@@ -266,9 +241,6 @@ void Play::Initialize()
 	secondTime = 0;
 	onResult = false;
 	getAchieve = 0;
-	//migrateCounter = 0;
-	//blackTexAlpha = 1;
-	//migrate = false;
 }
 
 void Play::Update()
@@ -408,8 +380,7 @@ void Play::PostDraw()
 		resource->PreDraw(1,0,0,1920*2,1080*2);
 		halfPauseBackTex->DrawSprite("halfPauseBack", { 0,0 }, 0, { 1,1 }, { 1,1,1,1 }, { 0,0 }, "NoAlphaToCoverageSprite");
 		resource->PostDraw();
-		//DirectXLib::GetInstance()->ReRenderTarget();
-
+		
 		pauseFrame = false;
 	}
 	if ((pause || onResult) && !Object3D::GetDrawShadow())

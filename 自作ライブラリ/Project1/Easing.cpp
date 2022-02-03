@@ -134,21 +134,21 @@ float Easing::EaseInCirc(const float & start, const float & end, const float & c
 {
 	float t = time;
 	t /= count;
-	return Lerp(start, end, (1 - sqrt(1 - powf(t, 2))));
+	return Lerp(start, end, (1 - sqrtf(1 - powf(t, 2))));
 }
 
 float Easing::EaseOutCirc(const float & start, const float & end, const float & count, const float & time)
 {
 	float t = time;
 	t /= count;
-	return Lerp(start, end, (sqrt(1 - powf(t - 1, 2))));
+	return Lerp(start, end, (sqrtf(1 - powf(t - 1, 2))));
 }
 
 float Easing::EaseInOutCirc(const float & start, const float & end, const float & count, const float & time)
 {
 	float t = time;
 	t /= count;
-	return Lerp(start, end, (t < 0.5? (1 - sqrt(1 - powf(2 * t, 2))) / 2: (sqrt(1 - powf(-2 * t + 2, 2)) + 1) / 2));
+	return Lerp(start, end, (t < 0.5? (1 - sqrtf(1 - powf(2 * t, 2))) / 2: (sqrtf(1 - powf(-2 * t + 2, 2)) + 1) / 2));
 }
 
 float Easing::EaseInBack(const float & start, const float & end, const float & count, const float & time)

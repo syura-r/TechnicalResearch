@@ -1,7 +1,6 @@
 #pragma once
 #include "BoxCollider.h"
 #include "GSShaderTestObj.h"
-
 class SetSquare45 :
     public GSShaderTestObj
 {
@@ -10,7 +9,7 @@ public:
 	~SetSquare45();
 	void Update()override;
 private:
-	std::vector<BoxCollider*> colliders;
+	std::vector<std::unique_ptr<BoxCollider>> colliders;
 	static const int ColliderNum = 14;
 	float colliderOffset[ColliderNum][3] =
 	{

@@ -22,8 +22,8 @@ void Create3DObject::CreatePyramid(const int vertex, const float topHeight, cons
 	this->r = topHeight / 2.0f;
 	for (int i = 0; i < vertex; i++)
 	{
-		vertices[i].pos.x = R * sin((XM_2PI / (vertex - 1)) * i) /** ((float)window_height / (float)window_width)*/;
-		vertices[i].pos.y = R * cos((XM_2PI / (vertex - 1)) * i);
+		vertices[i].pos.x = R * sinf((XM_2PI / (vertex - 1)) * i) /** ((float)window_height / (float)window_width)*/;
+		vertices[i].pos.y = R * cosf((XM_2PI / (vertex - 1)) * i);
 		vertices[i].pos.z = 0.0f;
 	}
 	vertices[vertex - 1].pos = { 0,0,0 };
@@ -301,15 +301,15 @@ void Create3DObject::CreateBox(const int vertex, const float TopHeight, const in
 		int radius = (int)Width / (int)sin(XM_2PI / vertex);
 		for (int i = 0; i < vertex; i++)
 		{
-			vertices[i].pos.x = radius * sin((XM_2PI / vertex) * i);
-			vertices[i].pos.y = radius * cos((XM_2PI / vertex) * i);
+			vertices[i].pos.x = radius * sinf((XM_2PI / vertex) * i);
+			vertices[i].pos.y = radius * cosf((XM_2PI / vertex) * i);
 			vertices[i].pos.z = TopHeight * 0.5f;
 		}
 		vertices[vertex].pos = { 0,0,TopHeight * 0.5f };
 		for (int i = vertex + 1; i < (vertex + 1) * 2 - 1; i++)
 		{
-			vertices[i].pos.x = radius * sin((XM_2PI / vertex) * (i - vertex - 1));
-			vertices[i].pos.y = radius * cos((XM_2PI / vertex) * (i - vertex - 1));
+			vertices[i].pos.x = radius * sinf((XM_2PI / vertex) * (i - vertex - 1));
+			vertices[i].pos.y = radius * cosf((XM_2PI / vertex) * (i - vertex - 1));
 			vertices[i].pos.z = -TopHeight * 0.5f;
 		}
 		vertices[(vertex + 1) * 2 - 1].pos = { 0,0,-TopHeight * 0.5f };

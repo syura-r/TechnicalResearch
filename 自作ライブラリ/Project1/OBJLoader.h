@@ -9,9 +9,8 @@ public:
 	static OBJModel* GetModel(const std::string& keyName) {
 		if (models[keyName] == nullptr)
 			assert(0);
-		return models[keyName];
+		return models[keyName].get();
 	};
-	static void DeleteModels();
 private:
-	static std::unordered_map<std::string, OBJModel*>models;
+	static std::unordered_map<std::string, std::unique_ptr<OBJModel>>models;
 };

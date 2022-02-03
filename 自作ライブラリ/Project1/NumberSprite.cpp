@@ -1,19 +1,10 @@
 #include "NumberSprite.h"
 
-#include "PtrDelete.h"
 #include "Texture.h"
 #include "Vector.h"
 
 NumberSprite::NumberSprite(float& num):num(num)
 {
-}
-
-NumberSprite::~NumberSprite()
-{
-	for(auto it = sprites.begin();it!=sprites.end();++it)
-	{
-		PtrDelete(*it);
-	}
 }
 
 void NumberSprite::Draw(const int digits, const std::string& texName, const XMFLOAT2& pos, const XMFLOAT2& scale, const XMFLOAT4& color,const XMFLOAT2& anchorPoint)
@@ -23,7 +14,8 @@ void NumberSprite::Draw(const int digits, const std::string& texName, const XMFL
 		const int add = digits - sprites.size();
 		for (int i = 0; i < add; i++)
 		{
-			sprites.push_back(new Sprite());
+			std::unique_ptr<Sprite> sprite(new Sprite());
+			sprites.push_back(std::move(sprite));
 		}
 	}
 	std::string nuwNum = std::to_string(num);

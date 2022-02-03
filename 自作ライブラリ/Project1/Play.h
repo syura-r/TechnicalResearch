@@ -26,52 +26,44 @@ public:
 	void PostDraw()override;
 private:
 	void TimeUpdate();
-	LightGroup* lightGroup = nullptr;
+	std::unique_ptr<LightGroup> lightGroup;
 	XMFLOAT3 pos = { 1,0,0 };
 	float coloramb[3] = { 1,1,1 };
 	float color0[3] = { 1,1,1 };
 	float color1[3] = { 1,1,1 };
 	float color2[3] = { 1,1,1 };
-	float lightDir[3] = {1,-0.6,0};
+	float lightDir[3] = {1.0f,-0.6f,0.0f};
 	bool targetSphere = false;
 	CollisionManager* collisionManager = nullptr;
 	ObjectManager* objectManager = nullptr;
-	NumberSprite* secondTimeSprite = nullptr;
-	NumberSprite* minuteTimeSprite = nullptr;
-	Goal* goal = nullptr;
-	Fluorescent* lights[9];
-	Player* player = nullptr;
-	Menu* menu = nullptr;
+	std::unique_ptr<NumberSprite> secondTimeSprite;
+	std::unique_ptr<NumberSprite> minuteTimeSprite;
+	std::unique_ptr<Goal> goal;
+	Player* player =nullptr;
+	std::unique_ptr<Menu> menu;
 	//ポーズ中
 	bool pause = false;
 	//ポーズボタンを押したフレーム（背景を別のリソースに描画させるフレーム）
 	bool pauseFrame = false;
-	TextureResource* resource = nullptr;
-	TextureResource* halfResource = nullptr;
-	TextureResource* quarterResource = nullptr;
+	std::unique_ptr<TextureResource> resource;
+	std::unique_ptr<TextureResource> halfResource;
+	std::unique_ptr<TextureResource> quarterResource;
 
-	Pencil* pencils[2];
-
-	//遷移フラグ
-	//bool migrate = false;
-	//int migrateCounter;
-	//Sprite* blackTex = nullptr;
-	//float blackTexAlpha;
+	std::unique_ptr<Pencil> pencils[2];
 	
 	//ポーズ中の背景
-	Sprite* pauseBackTex = nullptr;
-	Sprite* halfPauseBackTex = nullptr;
-	Sprite* quarterPauseBackTex = nullptr;
-
-	Sprite* colon = nullptr;
+	std::unique_ptr<Sprite> pauseBackTex;
+	std::unique_ptr<Sprite> halfPauseBackTex;
+	std::unique_ptr<Sprite> quarterPauseBackTex;
+	std::unique_ptr<Sprite> colon;
 	
 	float minuteTime = 0;
 	float secondTime = 0;
 	int frameCounter = 0;;
 	int getAchieve = 0;
 	bool onResult = false;
-	Result* result = nullptr;
-	DebugCamera* camera = nullptr;
+	std::unique_ptr<Result> result;
+	std::unique_ptr<DebugCamera> camera;
 	float lightPos[9][3] =
 	{
 		-6.000f,19.404f,2.137f,
@@ -127,7 +119,7 @@ private:
 	float FrontWallColliderOffset[2][3] =
 	{
 			-39.732f, 13.143f, 29.882f,
-			-42.742f, 12.857f, -5.200,
+			-42.742f, 12.857f, -5.200f,
 	};
 	float FrontWallColliderScale[2][3] =
 	{

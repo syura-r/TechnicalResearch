@@ -10,7 +10,7 @@ public:
 	~TeacherDesk();
 	void Update()override;
 private:
-	std::vector<BoxCollider*> colliders;
+	std::vector<std::unique_ptr<BoxCollider>> colliders;
 	float colliderOffset[9][3] =
 	{
 		-1.387f, 1.645f, 0.935f,

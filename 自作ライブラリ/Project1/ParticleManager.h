@@ -83,7 +83,7 @@ private://メンバ変数
 	//D3D12_INDEX_BUFFER_VIEW ibView = {};
 	//D3D12_VERTEX_BUFFER_VIEW matView{};//頂点バッファビュー
 
-	ComputeShade* computeShade = nullptr;
+	std::unique_ptr<ComputeShade> computeShade;
 	std::vector<OutputData> verts;
 	std::vector<ParticleParameter> params;
 

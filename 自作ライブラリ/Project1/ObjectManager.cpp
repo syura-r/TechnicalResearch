@@ -3,8 +3,6 @@
 #include "Collision.h"
 #include "CollisionManager.h"
 #include "Object.h"
-#include "PtrDelete.h"
-
 ObjectManager* ObjectManager::GetInstance()
 {
 	static ObjectManager instance;
@@ -13,7 +11,8 @@ ObjectManager* ObjectManager::GetInstance()
 
 void ObjectManager::Add(Object* object, bool preDraw)
 {
-	objects[preDraw].push_back(object);
+	std::unique_ptr<Object> obj(object);
+	objects[preDraw].push_back(std::move(obj));
 }
 
 void ObjectManager::Initialize()
@@ -44,7 +43,7 @@ void ObjectManager::Remove(Object* object)
 	{
 		for (auto it = itr.second.begin(); it != itr.second.end();)
 		{
-			if ((*it) == object)
+			if ((*it).get() == object)
 			{
 				it = itr.second.erase(it);
 			}
@@ -64,11 +63,11 @@ void ObjectManager::DrawReady()
 		for (auto& itr : it.second)
 		{
 			//Ž‹‘äƒJƒŠƒ“ƒO‚Ì”»’è
-			auto colliders = CollisionManager::GetInstance()->GetColliders(itr);
+			auto colliders = CollisionManager::GetInstance()->GetColliders(itr.get());
 			if (colliders == nullptr || Object3D::GetDrawShadow())
 			{
 				itr->DrawReady();
-				drawObjects[it.first][itr->GetPipelineName()].push_back(itr);
+				drawObjects[it.first][itr->GetPipelineName()].push_back(itr.get());
 				continue;
 			}
 			bool draw = false;
@@ -102,7 +101,7 @@ void ObjectManager::DrawReady()
 			if (draw)
 			{
 				itr->DrawReady();
-				drawObjects[it.first][itr->GetPipelineName()].push_back(itr);
+				drawObjects[it.first][itr->GetPipelineName()].push_back(itr.get());
 			}
 
 		}
@@ -136,14 +135,3 @@ void ObjectManager::PostDraw()
 	}
 }
 
-void ObjectManager::End()
-{
-	for (auto& it : objects)
-	{
-		for (auto& itr : it.second)
-		{
-			PtrDelete(itr);
-		}
-	}
-	objects.clear();
-}

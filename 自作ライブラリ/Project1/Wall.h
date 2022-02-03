@@ -12,7 +12,7 @@ public:
 	void Update()override;
 	void AddCollider(const float offset[3], const float colScale[3]);
 private:
-	std::vector<BoxCollider*> colliders;
+	std::vector<std::unique_ptr<BoxCollider>> colliders;
 
 	bool hit = false;
 

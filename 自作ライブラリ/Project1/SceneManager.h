@@ -1,6 +1,7 @@
 #pragma once
 #include <DirectXMath.h>
 #include <d3d12.h>
+#include <memory>
 
 #include"Scene.h"
 #include<unordered_map>
@@ -19,7 +20,6 @@ public:
 	void Change(Scene::SCENE next);
 	void PreDraw();
 	void PostDraw();
-	void End();
 private:
 
 	SceneManager() = default;
@@ -34,10 +34,10 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff[3];//定数バッファ
 
-	std::unordered_map<Scene::SCENE, Scene*>scenes;
+	std::unordered_map<Scene::SCENE, std::unique_ptr<Scene>>scenes;
 	Scene* currentScene = nullptr;
-	TextureResource* resource = nullptr;
-	Sprite* migrateTex = nullptr;
+	std::unique_ptr<TextureResource> resource;
+	std::unique_ptr<Sprite> migrateTex;
 	bool migrateStart;
 	float migrateTime;
 	int migrateCounter;

@@ -2,11 +2,10 @@
 
 #include "Easing.h"
 #include "Input.h"
-#include "PtrDelete.h"
 
 Result::Result()
 {
-	resource = new TextureResource("ResultTex",{700,960}, DXGI_FORMAT_R8G8B8A8_UNORM,{0,0,0,1});
+	resource.reset(new TextureResource("ResultTex",{700,960}, DXGI_FORMAT_R8G8B8A8_UNORM,{0,0,0,1}));
 	resultTex.pos = { 960,540 };
 	result.pos = { 350,100 };
 	clearTime.pos = { 220,280 };
@@ -20,9 +19,9 @@ Result::Result()
 	getAchieveTex.pos = { 450,550 };
 	getAchieveTex.color = { 1,1,1,0 };
 
-	secondTimeSprite = new NumberSprite(drawSecondTime);
-	minuteTimeSprite = new NumberSprite(drawMinuteTime);
-	resultColon = new Sprite();;
+	secondTimeSprite  = std::make_unique<NumberSprite>(drawSecondTime);
+	minuteTimeSprite  = std::make_unique<NumberSprite>(drawMinuteTime);
+	resultColon = std::make_unique<Sprite>();
 
 	timeSpritePos = {500,280};
 	timeSpriteColor = {1,1,1,0};
@@ -30,15 +29,6 @@ Result::Result()
 	denialTexScale = { 0,3 };
 	denialTex.pos = { 100,420 };
 	denialTex.color = { 0.6f,0.6f,0.6f,1 };
-
-}
-
-Result::~Result()
-{
-	PtrDelete(resource);
-	PtrDelete(secondTimeSprite);
-	PtrDelete(minuteTimeSprite);
-	PtrDelete(resultColon);
 
 }
 

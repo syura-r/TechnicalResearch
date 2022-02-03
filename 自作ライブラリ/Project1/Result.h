@@ -7,7 +7,6 @@ class Result
 {
 public:
 	Result();
-	~Result();
 	void Initialize(const float SecondTime, const float MinuteTime,const int GetAchieve);
 	bool Update();
 	void Draw();
@@ -19,16 +18,11 @@ private:
 	{
 		SpriteStruct()
 		{
-			spritePtr = new Sprite();
+			spritePtr = std::make_unique<Sprite>();
 			pos = { 0,0 };
 			color = { 1, 1, 1, 1 };
 		}
-		~SpriteStruct()
-		{
-			delete spritePtr;
-			spritePtr = nullptr;
-		}
-		Sprite* spritePtr;
+		std::unique_ptr<Sprite> spritePtr;
 		Vector2 pos;
 		XMFLOAT4 color;
 	};
@@ -52,9 +46,9 @@ private:
 	SpriteStruct resultTex;
 	SpriteStruct denialTex;
 
-	NumberSprite* secondTimeSprite = nullptr;
-	NumberSprite* minuteTimeSprite = nullptr;
-	Sprite* resultColon = nullptr;
+	std::unique_ptr<NumberSprite> secondTimeSprite;
+	std::unique_ptr<NumberSprite> minuteTimeSprite;
+	std::unique_ptr<Sprite> resultColon;
 	
 	Vector2 timeSpritePos;
 	XMFLOAT4 timeSpriteColor;
@@ -83,7 +77,7 @@ private:
 	//タイトルに戻るフラグ
 	bool returnTitle = false;
 	bool retryFlag = false;
-	TextureResource* resource = nullptr;
+	std::unique_ptr<TextureResource> resource;
 
 	float texAlpha = 0;
 };

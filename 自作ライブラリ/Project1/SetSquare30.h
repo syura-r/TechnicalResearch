@@ -10,7 +10,7 @@ public:
 	~SetSquare30();
 	void Update()override;
 private:
-	std::vector<BoxCollider*> colliders;
+	std::vector<std::unique_ptr<BoxCollider>> colliders;
 	static const int ColliderNum = 16;
 	float colliderOffset[ColliderNum][3] =
 	{

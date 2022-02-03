@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 #include"Vector.h"
 #pragma comment(lib,"d3dcompiler.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -32,26 +34,26 @@ private:
 	void LoadFinish();
 	void DrawLoadTex();
 	SceneManager* sceneManeger = nullptr;
-	Window* win = nullptr;
+	std::unique_ptr<Window> win;
 	DirectXLib* directX = nullptr;
 	ComputeWrapper* computeWrapper = nullptr;
 	//DebugCamera* camera = nullptr;
 	Vector3 cameraPos;
 	//PostEffect* postEffect = nullptr;
-	LightCamera* lightCamera = nullptr;
-	TextureResource* shadowMap = nullptr;
-	SSAO* ssao = nullptr;
-	SSAOCombine* ssaoCombine = nullptr;
+	std::unique_ptr <LightCamera> lightCamera = nullptr;
+	std::unique_ptr <TextureResource> shadowMap = nullptr;
+	std::unique_ptr <SSAO> ssao = nullptr;
+	std::unique_ptr <SSAOCombine> ssaoCombine = nullptr;
 
-	TextureResource* normalResource = nullptr;
-	TextureResource* halfNormalResource = nullptr;
-	TextureResource* mainResource = nullptr;
-	TextureResource* depthResource = nullptr;
-	TextureResource* halfDepthResource = nullptr;
+	std::unique_ptr < TextureResource> normalResource = nullptr;
+	std::unique_ptr <TextureResource> halfNormalResource = nullptr;
+	std::unique_ptr <TextureResource> mainResource = nullptr;
+	std::unique_ptr <TextureResource> depthResource = nullptr;
+	std::unique_ptr <TextureResource> halfDepthResource = nullptr;
 
-	TextureResource* ssaoResource = nullptr;
-	Sprite* depthTex = nullptr;
-	Sprite* normalTex = nullptr;
+	std::unique_ptr < TextureResource> ssaoResource = nullptr;
+	std::unique_ptr < Sprite> depthTex = nullptr;
+	std::unique_ptr < Sprite> normalTex = nullptr;
 
 	float dir[3] = { 1.0f,-0.60f,0.0f };
 
@@ -60,8 +62,8 @@ private:
 	//ÉçÅ[ÉhíÜ
 	bool nowLoading;
 
-	Sprite* loadTex = nullptr;
-	Sprite* loadDot = nullptr;
+	std::unique_ptr < Sprite> loadTex = nullptr;
+	std::unique_ptr < Sprite> loadDot = nullptr;
 
 	int loadAssetLevel = 0;
 	int createPipelineLevel = 0;

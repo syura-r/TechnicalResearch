@@ -6,7 +6,6 @@
 #include "Easing.h"
 #include "OBJLoader.h"
 #include "ParticleEmitter.h"
-#include "PtrDelete.h"
 
 Pencil::Pencil(const Vector3& pos)
 {
@@ -17,7 +16,7 @@ Pencil::Pencil(const Vector3& pos)
 	scale = { 0.5f,0.6f,0.5f };
 	color = { 0.3f,0.9f,0.1f,1 };
 	//‰”•M‚Ìì¬
-	pencil = new Object();
+	pencil = std::make_unique<Object>();
 	pencil->Create(OBJLoader::GetModel("pencil"));
 	pencilPosition = pos + Vector3{ 0,0.7f,0 };
 	BasePencilPosY = pos.y + 0.8f;
@@ -42,22 +41,16 @@ Pencil::Pencil(const Vector3& pos)
 	object->Update();
 	for (int i = 0; i < 3; i++)
 	{
-		colliders[i] = new BoxCollider({ 0, 0.65f, 0,0 }, Vector3{ 0.25f,0.65f,0.25f });
+		colliders[i].reset(new BoxCollider({ 0, 0.65f, 0,0 }, Vector3{ 0.25f,0.65f,0.25f }));
 		colliders[i]->SetRotation({ 0,30.0f * i,0 });
 		colliders[i]->SetObject(this);
 		colliders[i]->SetAttribute(COLLISION_ATTR_ITEM);
 		colliders[i]->Update();
-		CollisionManager::GetInstance()->AddCollider(colliders[i]);
-
+		CollisionManager::GetInstance()->AddCollider(colliders[i].get());
 	}
 
 }
 
-Pencil::~Pencil()
-{
-	PtrDelete(pencil);
-	Object::~Object();
-}
 void Pencil::Initialize()
 {
 	pencilMoveCounter = 30;

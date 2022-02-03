@@ -1,7 +1,6 @@
 #include "Game.h"
 #include"FPS.h"
 #include"OBJLoader.h"
-#include"PtrDelete.h"
 #include"Audio.h"
 #include"ParticleEmitter.h"
 #include"DebugText.h"
@@ -34,7 +33,7 @@ bool DrawMode::drawImGui = true;
 TextureResource* TextureResource::mainResource = nullptr;
 Game::Game()
 {
-	win = new Window(1920,1080);
+	win = std::make_unique<Window>(1920,1080);
 	directX = DirectXLib::GetInstance();
 	computeWrapper = ComputeWrapper::GetInstance();
 }
@@ -284,31 +283,30 @@ void Game::LoadFinish()
 	CollisionManager::GetInstance()->Initialize(Vector3{ -70.0f,-10.0f,-70.0f }+100, Vector3{ 70.0f,50.0f,70.0f }+100);
 	
 
-	lightCamera = new LightCamera();
+	lightCamera = std::make_unique<LightCamera>();
 	lightCamera->SetDistance(100);
 	lightCamera->SetLightDir({ dir[0],dir[1],dir[2] });
-	Object3D::SetLightCamera(lightCamera);
+	Object3D::SetLightCamera(lightCamera.get());
 	sceneManeger = SceneManager::GetInstance();
 	sceneManeger->Initialize();
 	sceneManeger->Add(Scene::SCENE::Title, new Title());
 	sceneManeger->Add(Scene::SCENE::Play, new Play());
 	sceneManeger->Add(Scene::SCENE::Ending, new Ending());
-	//sceneManeger->Add(Scene::SCENE::Test, new TestScene());
-	sceneManeger->Change(Scene::SCENE::Title);
+	sceneManeger->Change(Scene::SCENE::Play);
 	
-	mainResource = new TextureResource("mainTex");
-	TextureResource::SetMainResource(mainResource);
-	shadowMap = new TextureResource("shadowMap",{1920,1080}, DXGI_FORMAT_R32_FLOAT,{0,0,0,0});
-	depthResource = new TextureResource("depthTex", { 1920,1080 }, DXGI_FORMAT_R32_FLOAT, { 1,1,1,1 },true, false);
-	halfDepthResource = new TextureResource("halfDepthTex", { 1920 / 2,1080 / 2 }, DXGI_FORMAT_R32_FLOAT);
-	normalResource = new TextureResource("normalTex",false);
-	halfNormalResource = new TextureResource("halfNormalTex", { 1920 / 2,1080 / 2 });
-	ssaoResource = new TextureResource("SSAO", { 1920 / 2,1080 / 2 }, DXGI_FORMAT_R32_FLOAT,{1,0,0,0});
-	ssao = new SSAO();
-	ssaoCombine = new SSAOCombine();
+	mainResource = std::make_unique<TextureResource>("mainTex");
+	TextureResource::SetMainResource(mainResource.get());
+	shadowMap.reset(new TextureResource("shadowMap",{1920,1080}, DXGI_FORMAT_R32_FLOAT,{0,0,0,0}));
+	depthResource.reset(new TextureResource("depthTex", { 1920,1080 }, DXGI_FORMAT_R32_FLOAT, { 1,1,1,1 },true, false));
+	halfDepthResource.reset(new TextureResource("halfDepthTex", { 1920 / 2,1080 / 2 }, DXGI_FORMAT_R32_FLOAT));
+	normalResource = std::make_unique<TextureResource>("normalTex",false);
+	halfNormalResource.reset(new TextureResource("halfNormalTex", { 1920 / 2,1080 / 2 }));
+	ssaoResource.reset(new TextureResource("SSAO", { 1920 / 2,1080 / 2 }, DXGI_FORMAT_R32_FLOAT,{1,0,0,0}));
+	ssao = std::make_unique<SSAO>();
+	ssaoCombine = std::make_unique<SSAOCombine>();
 	nowLoading = false;
-	depthTex = new Sprite();
-	normalTex = new Sprite();
+	depthTex = std::make_unique<Sprite>(); 
+	normalTex = std::make_unique<Sprite>();
 
 }
 
@@ -316,7 +314,7 @@ void Game::DrawLoadTex()
 {
 	loadTex->DrawSprite("LoadPicture", { 0,0 }, 0, { 1,1 }, { 1,1,1,1 }, { 0,0 });
 	directX->DepthClear();
-	loadDot->SpriteSetTextureRect("LoadDot", 0, 0, 42 * (createPipelineLevel % 8), 25);
+	loadDot->SpriteSetTextureRect("LoadDot", 0, 0, 42.0f * (createPipelineLevel % 8), 25);
 	loadDot->DrawSprite("LoadDot", { 1560,1010 }, 0, { 1,1 }, { 1,1,1,1 }, { 0,0 });
 }
 
@@ -325,13 +323,13 @@ void Game::Initialize()
 	win->CreateWidow(Window::WINDOW);
 
 	// DirectX 初期化処理 ここから
-	directX->Initialize(win);
+	directX->Initialize(win.get());
 	computeWrapper->Initialize();
 
 	// DirectX 初期化処理 ここまで
-	FPS::SetWindow(win);
+	FPS::SetWindow(win.get());
 	FbxLoader::GetInstance()->Initialize();
-	Sprite::StaticInitialize(win);
+	Sprite::StaticInitialize(win.get());
 	Audio::Initialize();
 	//ShowCursor(false);
 	nowLoading = true;
@@ -344,8 +342,8 @@ void Game::Initialize()
 	DebugText::Initialize();
 #endif // _DEBUG
 
-	loadTex = new Sprite();
-	loadDot = new Sprite();
+	loadTex = std::make_unique<Sprite>();
+	loadDot = std::make_unique<Sprite>();
 
 }
 
@@ -477,24 +475,7 @@ void Game::End()
 	}
 	directX->End();
 	computeWrapper->End();
-	PtrDelete(lightCamera);
-	PtrDelete(shadowMap);
-	PtrDelete(loadTex);
-	PtrDelete(loadDot);
-	PtrDelete(ssao);
-	PtrDelete(ssaoCombine);
-	PtrDelete(normalResource);
-	PtrDelete(halfNormalResource);
-	PtrDelete(ssaoResource);
-	PtrDelete(mainResource);
-	PtrDelete(halfDepthResource);
-	PtrDelete(depthResource);
-	PtrDelete(depthTex);
-	PtrDelete(normalTex);
-	sceneManeger->End();
-
 	ParticleEmitter::End();
-	OBJLoader::DeleteModels();
 #ifdef _DEBUG
 	DebugText::End();
 #endif // _DEBUG
@@ -503,5 +484,4 @@ void Game::End()
 	//デリートはここまでに終わらせる
 	//ComputeWrapper::GetInstance()->End();
 	win->End();
-	PtrDelete(win);
 }

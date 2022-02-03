@@ -5,10 +5,9 @@ class NumberSprite
 {
 public:
 	NumberSprite(float& num);
-	~NumberSprite();
 	void Draw(const int digits,const std::string& texName = "number",const XMFLOAT2& pos = {0,0}, const XMFLOAT2& scale = { 1.0f,1.0f },const XMFLOAT4& color = { 1,1,1,1 },const XMFLOAT2& anchorPoint = {0.5f,0.5f});
 private:
 	float &num;
-	std::vector<Sprite*>sprites;
+	std::vector<std::unique_ptr<Sprite>>sprites;
 };
 

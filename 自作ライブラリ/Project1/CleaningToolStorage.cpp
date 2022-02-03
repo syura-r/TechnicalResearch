@@ -3,10 +3,8 @@
 #include "BoxCollider.h"
 #include "CollisionAttribute.h"
 #include "CollisionManager.h"
-#include "DrawMode.h"
 #include "FBXManager.h"
 #include "OBJLoader.h"
-#include"PtrDelete.h"
 #include "Texture.h"
 
 CleaningToolStorage::CleaningToolStorage()

@@ -1,6 +1,5 @@
 #include "DebugText.h"
-#include"PtrDelete.h"
-Sprite* DebugText::spriteDatas[maxCharCount] = {};
+std::unique_ptr<Sprite> DebugText::spriteDatas[maxCharCount] = {};
 std::vector<Status> DebugText::statues = {};
 int  DebugText::spriteIndex = 0;
 
@@ -18,9 +17,9 @@ void DebugText::Print(const std::string & text,const float& posX,const float& po
 {
 	for (int i = 0; i < text.size(); i++)
 	{
-		if (spriteDatas[spriteIndex] == nullptr)
+		if (spriteDatas[spriteIndex].get() == nullptr)
 		{
-			spriteDatas[spriteIndex] = new Sprite();
+			spriteDatas[spriteIndex] = std::make_unique<Sprite>();
 		}
 		if (spriteIndex >= maxCharCount)
 		{
@@ -58,7 +57,4 @@ void DebugText::Draw(const XMFLOAT4& color)
 
 void DebugText::End()
 {
-	for (int i = 0; i < _countof(spriteDatas); i++) {
-		PtrDelete(spriteDatas[i]);
-	}
 }
