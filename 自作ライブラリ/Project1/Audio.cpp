@@ -123,8 +123,8 @@ void Audio::End()
 {
 	masterVoice->DestroyVoice();
 	if (xAudio2.Get() != nullptr)xAudio2->StopEngine();
-	for (auto itr = soundFiles.begin(); itr != soundFiles.end(); itr++)
+	for (auto& it : soundFiles)
 	{
-		delete[](*itr).second.buff;
+		delete[]it.second.buff;
 	}
 }

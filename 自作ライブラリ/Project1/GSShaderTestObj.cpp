@@ -54,11 +54,10 @@ void GSShaderTestObj::DrawReady()
 			pipelineName = "PolygonBreak";
 			return;
 		}
-		const auto endIt = colliders->end();
-		for (auto it = colliders->begin(); it != endIt; ++it)
+		for (auto& it : *colliders)
 		{
-			auto maxPos = (*it)->GetMax();
-			auto minPos = (*it)->GetMin();
+			auto maxPos = it->GetMax();
+			auto minPos = it->GetMin();
 			const Vector3 targetToMaxPos = maxPos - targetPos;
 			const Vector3 targetToMinPos = minPos - targetPos;
 			const float dotMax = Vector3::Dot(Vector3(targetToCamera).Normalize(), Vector3(targetToMaxPos).Normalize());
@@ -78,7 +77,7 @@ void GSShaderTestObj::DrawReady()
 			ray.start = targetPos.ConvertXMVECTOR();
 			float dis;
 			XMVECTOR inter;
-			BoxCollider* col = dynamic_cast<BoxCollider*>(*it);
+			BoxCollider* col = dynamic_cast<BoxCollider*>(it);
 			if (!Collision::CheckRay2OBB(ray, *col, &dis, &inter))
 				continue;
 			if (fabs(Vector3::Length(cameraPos - inter)) < 10

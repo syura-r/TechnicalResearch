@@ -44,6 +44,7 @@ enum ShaderType
 	AreaEffect,
 	FisheyeLens,
 	Migrate,
+	DepthSPRITE,
 };
 
 class PipelineState

@@ -65,11 +65,10 @@ Protractor::~Protractor()
 	}
 
 	file.close();
-
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		CollisionManager::GetInstance()->RemoveCollider(*it);
-		PtrDelete(*it);
+		CollisionManager::GetInstance()->RemoveCollider(it);
+		PtrDelete(it);
 	}
 }
 
@@ -85,9 +84,9 @@ void Protractor::Update()
 		hit = false;
 	}
 	Object::Update();
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 }
 

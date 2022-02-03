@@ -142,5 +142,6 @@ PSOutPut PSmain(VSOutput input) : SV_TARGET
     output.color = pow(returnColor, 1.0 / 2.2);
     output.normal.rgb = float3((input.normal.xyz + 1.0f) / 2.0f);
     output.normal.a = 1;
+    output.depth = float4(input.svpos.z, input.svpos.z, input.svpos.z, 1.0f);
     return output;
 }

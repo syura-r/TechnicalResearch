@@ -4,8 +4,18 @@
 #include "Texture.h"
 std::vector<TextureResource*> TextureResource::nowRenderTargets = {};
 int TextureResource::bbindex = 0;
-TextureResource::TextureResource(const std::string& name, const Vector2& size, const DXGI_FORMAT resourceFormat, const DirectX::XMFLOAT4& arg_clearColor, const bool arg_threeResource)
-	: resourceWidth(size.x), resourceHeight(size.y), format(resourceFormat), clearColor{ arg_clearColor.x,arg_clearColor.y, arg_clearColor.z, arg_clearColor.w }, threeResource(arg_threeResource)
+TextureResource::TextureResource(const std::string& name, const bool noDepth)
+	: resourceWidth(1920), resourceHeight(1080), format(DXGI_FORMAT_R8G8B8A8_UNORM), clearColor{ 1,1,1,1 }, threeResource(true), noDepth(noDepth)
+{
+	Initialize(name);
+}
+
+TextureResource::TextureResource(const std::string& name, const Vector2& size, const DXGI_FORMAT resourceFormat, const DirectX::XMFLOAT4& arg_clearColor, const bool arg_threeResource, const bool noDepth)
+	: resourceWidth(size.x), resourceHeight(size.y), format(resourceFormat), clearColor{ arg_clearColor.x,arg_clearColor.y, arg_clearColor.z, arg_clearColor.w }, threeResource(arg_threeResource), noDepth(noDepth)
+{
+	Initialize(name);
+}
+void TextureResource::Initialize(const std::string& name)
 {
 	dev = DirectXLib::GetInstance()->GetDevice();
 	cmdList = DirectXLib::GetInstance()->GetCommandList();
@@ -139,41 +149,43 @@ TextureResource::TextureResource(const std::string& name, const Vector2& size, c
 	//D3D12_HEAP_PROPERTIES depthHeapProp{};
 	//depthHeapProp.Type = D3D12_HEAP_TYPE_DEFAULT;
 
-	//リソース設定
-	CD3DX12_RESOURCE_DESC depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
-		DXGI_FORMAT_R32_TYPELESS,
-		resourceWidth,
-		resourceHeight,
-		1, 0, 1, 0,
-		D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
-	);
+	if (!noDepth)
+	{
+		//リソース設定
+		CD3DX12_RESOURCE_DESC depthResDesc = CD3DX12_RESOURCE_DESC::Tex2D(
+			DXGI_FORMAT_R32_TYPELESS,
+			resourceWidth,
+			resourceHeight,
+			1, 0, 1, 0,
+			D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL
+		);
 
-	//リソース設定
-	result = dev->CreateCommittedResource(
-		&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),//アップロード不可
-		D3D12_HEAP_FLAG_NONE,
-		&depthResDesc,
-		D3D12_RESOURCE_STATE_DEPTH_WRITE,//深度値書き込みに使用
-		&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0),
-		IID_PPV_ARGS(&depthBuffer));
-	assert(SUCCEEDED(result));
+		//リソース設定
+		result = dev->CreateCommittedResource(
+			&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),//アップロード不可
+			D3D12_HEAP_FLAG_NONE,
+			&depthResDesc,
+			D3D12_RESOURCE_STATE_DEPTH_WRITE,//深度値書き込みに使用
+			&CD3DX12_CLEAR_VALUE(DXGI_FORMAT_D32_FLOAT, 1.0f, 0),
+			IID_PPV_ARGS(&depthBuffer));
+		assert(SUCCEEDED(result));
 
-	//深度ビュー用デスクリプタヒープ作成
-	D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
-	dsvHeapDesc.NumDescriptors = 1;//深度ビューは1つ
-	dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;//デプスステンシルビュー
-	result = dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
-	assert(SUCCEEDED(result));
+		//深度ビュー用デスクリプタヒープ作成
+		D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc{};
+		dsvHeapDesc.NumDescriptors = 1;//深度ビューは1つ
+		dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;//デプスステンシルビュー
+		result = dev->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap));
+		assert(SUCCEEDED(result));
 
-	//深度ビュー作成
-	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;//深度値フォーマット
-	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-	dev->CreateDepthStencilView(
-		depthBuffer.Get(),
-		&dsvDesc,
-		dsvHeap->GetCPUDescriptorHandleForHeapStart());
-
+		//深度ビュー作成
+		D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
+		dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;//深度値フォーマット
+		dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+		dev->CreateDepthStencilView(
+			depthBuffer.Get(),
+			&dsvDesc,
+			dsvHeap->GetCPUDescriptorHandleForHeapStart());
+	}
 	if (threeResource)
 	{
 		for (int i = 0; i < 3; i++)
@@ -185,6 +197,7 @@ TextureResource::TextureResource(const std::string& name, const Vector2& size, c
 	{
 		Texture::AddTexture(name, resource[0].Get());
 	}
+
 }
 
 void TextureResource::PreDraw(const UINT arg_numRTD, const float topLeftX, const float topLeftY, const float width, const float height,
@@ -224,30 +237,46 @@ void TextureResource::PreDraw(const UINT arg_numRTD, const float topLeftX, const
 	}
 	else
 	{
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHeapPointer[2];
-		
-		rtvHeapPointer[0] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			mainResource->peraRTVHeap->GetCPUDescriptorHandleForHeapStart(), bbIndex,
-			dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
-		rtvHeapPointer[1] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			peraRTVHeap->GetCPUDescriptorHandleForHeapStart(), bbIndex,
-			dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
-		
-		CD3DX12_VIEWPORT viewports[2];
-		CD3DX12_RECT scissorRects[2];
+		std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> rtvHeapPointer;
+		rtvHeapPointer.resize(arg_numRTD);
 
-		for (int i = 0; i < 2; i++)
+		auto it = nowRenderTargets.end();
+		it--;
+
+		for (int i = arg_numRTD - 1; i >= 0; i--)
+		{
+			rtvHeapPointer[i] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+				(*it)->peraRTVHeap->GetCPUDescriptorHandleForHeapStart(), bbIndex,
+				dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
+			if (it == nowRenderTargets.begin())
+				break;
+			it--;
+		}
+
+		//rtvHeapPointer[0] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+		//	mainResource->peraRTVHeap->GetCPUDescriptorHandleForHeapStart(), bbIndex,
+		//	dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
+		//rtvHeapPointer[1] = CD3DX12_CPU_DESCRIPTOR_HANDLE(
+		//	peraRTVHeap->GetCPUDescriptorHandleForHeapStart(), bbIndex,
+		//	dev->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
+
+		std::vector <CD3DX12_VIEWPORT> viewports;
+		std::vector <CD3DX12_RECT> scissorRects;
+		viewports.resize(arg_numRTD);
+		scissorRects.resize(arg_numRTD);
+
+		for (int i = 0; i < arg_numRTD; i++)
 		{
 			viewports[i] = CD3DX12_VIEWPORT(topLeftX, topLeftY, width, height);
 			scissorRects[i] = CD3DX12_RECT(left, top, right, bottom);
 		}
 
-		auto dsvH = mainResource->dsvHeap->GetCPUDescriptorHandleForHeapStart();
-		cmdList->OMSetRenderTargets(2, rtvHeapPointer, false, &dsvH);
-		cmdList->RSSetViewports(2, viewports);
-		cmdList->RSSetScissorRects(2, scissorRects);
+		auto dsvH = (*it)->dsvHeap->GetCPUDescriptorHandleForHeapStart();
+		cmdList->OMSetRenderTargets(arg_numRTD, rtvHeapPointer.data(), false, &dsvH);
+		cmdList->RSSetViewports(arg_numRTD, viewports.data());
+		cmdList->RSSetScissorRects(arg_numRTD, scissorRects.data());
 
-		cmdList->ClearRenderTargetView(rtvHeapPointer[1], clearColor, 0, nullptr);
+		cmdList->ClearRenderTargetView(rtvHeapPointer[arg_numRTD - 1], clearColor, 0, nullptr);
 
 		//cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}
@@ -259,6 +288,7 @@ void TextureResource::DepthClear()
 	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
 }
+
 
 void TextureResource::ResetRenderTarget()
 {
@@ -284,7 +314,7 @@ void TextureResource::PostDraw(const bool renderTargetReset)
 	nowRenderTargets.pop_back();
 	if (!renderTargetReset)
 		return;
-	if(nowRenderTargets.size() == 0)
+	if (nowRenderTargets.size() == 0)
 	{
 		DirectXLib::GetInstance()->ReRenderTarget();
 	}

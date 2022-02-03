@@ -89,25 +89,25 @@ SSAO::SSAO()
 		constBuff2[i]->Unmap(0, nullptr);
 	}
 
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-	heapDesc.NodeMask = 0;
-	heapDesc.NumDescriptors = 1;
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-	result = dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&depthSRVHeap));
-	assert(SUCCEEDED(result));
+	//D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+	//heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+	//heapDesc.NodeMask = 0;
+	//heapDesc.NumDescriptors = 1;
+	//heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	//result = dev->CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(&depthSRVHeap));
+	//assert(SUCCEEDED(result));
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC resDesc = {};
-	resDesc.Format = DXGI_FORMAT_R32_FLOAT;
-	resDesc.Texture2D.MipLevels = 1;
-	resDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	resDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	//D3D12_SHADER_RESOURCE_VIEW_DESC resDesc = {};
+	//resDesc.Format = DXGI_FORMAT_R32_FLOAT;
+	//resDesc.Texture2D.MipLevels = 1;
+	//resDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	//resDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 
-	auto handle = depthSRVHeap->GetCPUDescriptorHandleForHeapStart();
-	//通常デプス→テクスチャ用
-	dev->CreateShaderResourceView(TextureResource::mainResource->depthBuffer.Get(),
-		&resDesc,
-		handle);
+	//auto handle = depthSRVHeap->GetCPUDescriptorHandleForHeapStart();
+	////通常デプス→テクスチャ用
+	//dev->CreateShaderResourceView(TextureResource::mainResource->depthBuffer.Get(),
+	//	&resDesc,
+	//	handle);
 
 }
 
@@ -127,10 +127,12 @@ void SSAO::Draw()
 	cmdList->SetGraphicsRootConstantBufferView(1, constBuff2[bbindex]->GetGPUVirtualAddress());
 
 	//インデックスバッファのセットコマンド
-	cmdList->SetGraphicsRootDescriptorTable(2, Texture::GetGpuDescHandleSRV("normalTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
-	cmdList->SetDescriptorHeaps(1, depthSRVHeap.GetAddressOf());
-	auto handle = depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
-	cmdList->SetGraphicsRootDescriptorTable(3, handle);
+	cmdList->SetGraphicsRootDescriptorTable(2, Texture::GetGpuDescHandleSRV("halfNormalTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
+	cmdList->SetGraphicsRootDescriptorTable(3, Texture::GetGpuDescHandleSRV("halfDepthTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
+
+	//cmdList->SetDescriptorHeaps(1, depthSRVHeap.GetAddressOf());
+	//auto handle = depthSRVHeap->GetGPUDescriptorHandleForHeapStart();
+	//cmdList->SetGraphicsRootDescriptorTable(3, handle);
 
 	cmdList->DrawInstanced(4, 1, 0, 0);
 }

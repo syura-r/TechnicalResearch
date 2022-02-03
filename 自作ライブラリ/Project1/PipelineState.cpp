@@ -48,7 +48,7 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 	gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
 	gpipeline.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT); 
 	gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;//カリングしない
-	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+	//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 	D3D12_RENDER_TARGET_BLEND_DESC blenddesc{};
 	blenddesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;//標準設定
 	//ブレンドステートに設定する
@@ -160,11 +160,11 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 		CompileShader("ShadowMapPBDS", dsBlob, errorBlob, DS);
 
 		gpipeline.RTVFormats[0] = DXGI_FORMAT_R32_FLOAT;//Rのみ32ビットのFLOAT形式
-		gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+		//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 			
 		SetVSLayout("POSITION", inputLayout, DXGI_FORMAT_R32G32B32_FLOAT);
 		SetVSLayout("TEXCOORD", inputLayout, DXGI_FORMAT_R32G32_FLOAT);
-		gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 
 		SetDescriptorConstantBuffer(rootparams, 2,0, descRangeSRVs);
 
@@ -172,6 +172,23 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 
 		gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH;
 		primitiveTopologies[keyName] = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
+
+		break;
+	}
+	case DepthSPRITE:
+	{
+		CompileShader("SpriteVertexShader", vsBlob, errorBlob, VS);
+		CompileShader("SpritePixelShader", psBlob, errorBlob, PS);
+
+		SetVSLayout("POSITION", inputLayout, DXGI_FORMAT_R32G32B32_FLOAT);
+		SetVSLayout("TEXCOORD", inputLayout, DXGI_FORMAT_R32G32_FLOAT);
+		primitiveTopologies[keyName] = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
+		gpipeline.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
+
+		SetDescriptorConstantBuffer(rootparams, 1, 1, descRangeSRVs);
+
+		rootSignatureDesc.Init_1_0(rootparams.size(), rootparams.data(), 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+		gpipeline.RTVFormats[0] = DXGI_FORMAT_R32_FLOAT;
 
 		break;
 	}
@@ -360,15 +377,16 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 		samplerDesc2.MaxAnisotropy = 1;
 		samplerDesc2.ShaderRegister = 1;
 		//gpipeline.RasterizerState.FillMode = D3D12_FILL_MODE_WIREFRAME;
-		gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 		CD3DX12_STATIC_SAMPLER_DESC samplerDescs[2] = { samplerDesc,samplerDesc2 };
 		rootSignatureDesc.Init_1_0(rootparams.size(), rootparams.data(), 2, samplerDescs, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
 		gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH;
 		primitiveTopologies[keyName] = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
-		gpipeline.NumRenderTargets = 2;
+		gpipeline.NumRenderTargets = 3;
 		gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
 		gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
+		gpipeline.RTVFormats[2] = DXGI_FORMAT_R32_FLOAT;//0～255 指定の R
 
 			
 		break;
@@ -480,12 +498,13 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 		SetVSLayout("TEXCOORD", inputLayout, DXGI_FORMAT_R32G32_FLOAT);
 		SetVSLayout("BONEINDICES", inputLayout, DXGI_FORMAT_R32G32B32A32_UINT);
 		SetVSLayout("BONEWEIGHTS", inputLayout, DXGI_FORMAT_R32G32B32A32_FLOAT);
-		gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		//gpipeline.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 
 		SetDescriptorConstantBuffer(rootparams, 4 ,2, descRangeSRVs);
-		gpipeline.NumRenderTargets = 2;
+		gpipeline.NumRenderTargets = 3;
 		gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
 		gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
+		gpipeline.RTVFormats[2] = DXGI_FORMAT_R32_FLOAT;//0～255 指定の RGBA
 
 		CD3DX12_STATIC_SAMPLER_DESC samplerDesc2 = samplerDesc;
 		samplerDesc2.Filter = D3D12_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
@@ -525,9 +544,10 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 
 		gpipeline.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_PATCH;
 		primitiveTopologies[keyName] = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
-		gpipeline.NumRenderTargets = 2;
+		gpipeline.NumRenderTargets = 3;
 		gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
 		gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
+		gpipeline.RTVFormats[2] = DXGI_FORMAT_R32_FLOAT;//0～255 指定の R
 
 		break;
 	}
@@ -567,9 +587,10 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 		CD3DX12_STATIC_SAMPLER_DESC samplerDescs[2] = { samplerDesc,samplerDesc2 };
 		rootSignatureDesc.Init_1_0(rootparams.size(), rootparams.data(), 2, samplerDescs, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-		gpipeline.NumRenderTargets = 2;
+		gpipeline.NumRenderTargets = 3;
 		gpipeline.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
 		gpipeline.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;//0～255 指定の RGBA
+		gpipeline.RTVFormats[2] = DXGI_FORMAT_R32_FLOAT;//0～255 指定の R
 
 
 		break;

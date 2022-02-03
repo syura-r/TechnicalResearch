@@ -9,12 +9,15 @@
 class TextureResource
 {
 public:
-	TextureResource(const std::string& name,const Vector2& size={1920,1080},const DXGI_FORMAT resourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM,const DirectX::XMFLOAT4& arg_clearColor = {1,1,1,1},const bool arg_threeResource = true);
+	TextureResource(const std::string& name, const bool noDepth);
+	TextureResource(const std::string& name, const Vector2& size = { 1920,1080 }, const DXGI_FORMAT resourceFormat = DXGI_FORMAT_R8G8B8A8_UNORM, const DirectX::XMFLOAT4& arg_clearColor = { 1,1,1,1 }, const bool arg_threeResource = true, const bool noDepth = false);
+
 	void PostDraw(const bool renderTargetReset = true);
 	void PreDraw(const UINT arg_numRTD = 1, const float topLeftX = 0, const float topLeftY = 0, const float width = 1920, const float height = 1080,
 		const LONG& left = 0, const LONG& top = 0, const LONG& right = 1920, const LONG& bottom = 1080);
 	void DepthClear();
 private:
+	void Initialize(const std::string& name);
 	Microsoft::WRL::ComPtr<ID3D12Resource> resource[3];
 	Microsoft::WRL::ComPtr <ID3D12Resource> depthBuffer;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap;
@@ -24,11 +27,12 @@ private:
 	ID3D12Device* dev;
 	DXGI_FORMAT format;
 	float clearColor[4] = {};
-	int resourceWidth ;
+	int resourceWidth;
 	int resourceHeight;
 	UINT numRTD = 1;
 	void ResetRenderTarget();
 	bool threeResource;
+	bool noDepth;
 private:
 	static std::vector<TextureResource*> nowRenderTargets;
 	static int bbindex;
@@ -44,5 +48,7 @@ public:
 	}
 private:
 	friend class SSAO;
+	friend class DeferredRendering;
+
 };
 

@@ -708,13 +708,13 @@ void CollisionManager::SendBoxBuffers(UINT& num)
 	BoxVBData* vertMap = nullptr;
 	auto result = boxVertBuff[bbIndex]->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
-		for (auto it = colliders.begin(); it != colliders.end(); ++it)
+		for (auto& it : colliders)
 		{
-			for (auto colIt = it->second.begin(); colIt != it->second.end(); ++colIt)
+			for (auto& colIt : it.second)
 			{
-				if ((*colIt)->GetShapeType() != COLLISIONSHAPE_BOX)
+				if (colIt->GetShapeType() != COLLISIONSHAPE_BOX)
 					continue;
-				BoxCollider* boxCollider = dynamic_cast<BoxCollider*>(*colIt);
+				BoxCollider* boxCollider = dynamic_cast<BoxCollider*>(colIt);
 				vertMap->center = boxCollider->GetObjCenter() + boxCollider->GetOffset();
 				vertMap->scale = boxCollider->GetScale();
 				vertMap->objCenter = boxCollider->GetObjCenter();
@@ -758,13 +758,13 @@ void CollisionManager::SendSphereBuffers(UINT& num)
 	SphereVBData* vertMap = nullptr;
 	auto result = sphereVertBuff[bbIndex]->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result)) {
-		for (auto it = colliders.begin(); it != colliders.end(); ++it)
+		for (auto& it : colliders)
 		{
-			for (auto colIt = it->second.begin(); colIt != it->second.end(); ++colIt)
+			for (auto& colIt : it.second)
 			{
-				if ((*colIt)->GetShapeType() != COLLISIONSHAPE_SPHERE)
+				if (colIt->GetShapeType() != COLLISIONSHAPE_SPHERE)
 					continue;
-				SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(*colIt);
+				SphereCollider* sphereCollider = dynamic_cast<SphereCollider*>(colIt);
 				vertMap->center = XMFLOAT3(sphereCollider->center.m128_f32[0], sphereCollider->center.m128_f32[1], sphereCollider->center.m128_f32[2]);
 				vertMap->radius = sphereCollider->GetRadius();
 				// ŽŸ‚Ì’¸“_‚Ö

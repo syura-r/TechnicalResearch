@@ -18,39 +18,35 @@ void ObjectManager::Add(Object* object, bool preDraw)
 
 void ObjectManager::Initialize()
 {
-	auto end_it = objects.end();
-	for (auto it = objects.begin(); it != end_it; ++it)
+	for (auto& it : objects)
 	{
-		auto end_itr = it->second.end();
-		for (auto itr = it->second.begin(); itr != end_itr; ++itr)
+		for (auto& itr : it.second)
 		{
-			(*itr)->Initialize();
+			itr->Initialize();
 		}
 	}
 }
 
 void ObjectManager::Update()
 {
-	auto end_it = objects.end();
-	for(auto it = objects.begin();it != end_it;++it)
+	for (auto& it : objects)
 	{
-		auto end_itr = it->second.end();
-		for(auto itr = it->second.begin();itr != end_itr;++itr)
+		for (auto& itr : it.second)
 		{
-			(*itr)->Update();
+			itr->Update();
 		}
 	}
 }
 
 void ObjectManager::Remove(Object* object)
 {
-	for (auto itr = objects.begin(); itr != objects.end(); ++itr)
+	for (auto& itr : objects)
 	{
-		for (auto it = itr->second.begin(); it != itr->second.end();)
+		for (auto it = itr.second.begin(); it != itr.second.end();)
 		{
 			if ((*it) == object)
 			{
-				it = itr->second.erase(it);
+				it = itr.second.erase(it);
 			}
 			else
 				++it;
@@ -62,25 +58,25 @@ void ObjectManager::DrawReady()
 {
 	//登録されているオブジェクトの使用パイプライン毎に配列に格納
 	drawObjects.clear();
-	for(auto it = objects.begin();it != objects.end();++it)
+	
+	for (auto& it : objects)
 	{
-		for(auto itr = it->second.begin();itr!=it->second.end();++itr)
+		for (auto& itr : it.second)
 		{
 			//視錐台カリングの判定
-			auto colliders = CollisionManager::GetInstance()->GetColliders(*itr);
+			auto colliders = CollisionManager::GetInstance()->GetColliders(itr);
 			if (colliders == nullptr || Object3D::GetDrawShadow())
 			{
-				(*itr)->DrawReady();
-				drawObjects[it->first][(*itr)->GetPipelineName()].push_back(*itr);
+				itr->DrawReady();
+				drawObjects[it.first][itr->GetPipelineName()].push_back(itr);
 				continue;
 			}
 			bool draw = false;
-			auto endIt = colliders->end();
-			for (auto it = colliders->begin(); it != endIt; ++it)
+			for (auto& colIt : *colliders)
 			{
 				Box box;
-				auto max = (*it)->GetMax();
-				auto min = (*it)->GetMin();
+				auto max = colIt->GetMax();
+				auto min = colIt->GetMin();
 				if(min.x < max.x)
 					box.minPosition.x = min.x;
 				else
@@ -105,8 +101,8 @@ void ObjectManager::DrawReady()
 			}
 			if (draw)
 			{
-				(*itr)->DrawReady();
-				drawObjects[it->first][(*itr)->GetPipelineName()].push_back(*itr);
+				itr->DrawReady();
+				drawObjects[it.first][itr->GetPipelineName()].push_back(itr);
 			}
 
 		}
@@ -115,16 +111,13 @@ void ObjectManager::DrawReady()
 
 void ObjectManager::PreDraw()
 {
-	//int num = 0;
-	auto end_itr = drawObjects[true].end();
-	for (auto itr = drawObjects[true].begin(); itr != end_itr; ++itr)
+	for (auto& itr : drawObjects[true])
 	{
 		//パイプラインごとの配列になっているため配列の先頭時のみパイプラインを設定
-		PipelineState::SetPipeline(itr->first);
-		auto endObject_itr = itr->second.end();
-		for (auto objectItr = itr->second.begin(); objectItr != endObject_itr; ++objectItr)
+		PipelineState::SetPipeline(itr.first);
+		for (auto& objectItr : itr.second)
 		{
-			(*objectItr)->Draw();
+			objectItr->Draw();
 		}
 	}
 
@@ -132,27 +125,24 @@ void ObjectManager::PreDraw()
 
 void ObjectManager::PostDraw()
 {
-	auto end_itr = drawObjects[false].end();
-	for (auto itr = drawObjects[false].begin(); itr != end_itr; ++itr)
+	for (auto& itr : drawObjects[false])
 	{
-		PipelineState::SetPipeline(itr->first);
-		auto endObject_itr = itr->second.end();
-		for (auto objectItr = itr->second.begin(); objectItr != endObject_itr; ++objectItr)
+		//パイプラインごとの配列になっているため配列の先頭時のみパイプラインを設定
+		PipelineState::SetPipeline(itr.first);
+		for (auto& objectItr : itr.second)
 		{
-			(*objectItr)->Draw();
+			objectItr->Draw();
 		}
 	}
 }
 
 void ObjectManager::End()
 {
-	auto end_it = objects.end();
-	for (auto it = objects.begin(); it != end_it; ++it)
+	for (auto& it : objects)
 	{
-		auto end_itr = it->second.end();
-		for (auto itr = it->second.begin(); itr != end_itr; ++itr)
+		for (auto& itr : it.second)
 		{
-			PtrDelete(*itr);
+			PtrDelete(itr);
 		}
 	}
 	objects.clear();

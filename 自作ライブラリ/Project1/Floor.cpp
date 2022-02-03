@@ -46,9 +46,9 @@ Floor::Floor()
 
 Floor::~Floor()
 {
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto& it : colliders)
 	{
-		PtrDelete(*it);
+		PtrDelete(it);
 	}
 
 }
@@ -56,8 +56,8 @@ Floor::~Floor()
 void Floor::Update()
 {
 	Object::Update();
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto& it : colliders)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 }

@@ -33,10 +33,10 @@ SetSquare45::SetSquare45()
 
 SetSquare45::~SetSquare45()
 {
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		CollisionManager::GetInstance()->RemoveCollider(*it);
-		PtrDelete(*it);
+		CollisionManager::GetInstance()->RemoveCollider(it);
+		PtrDelete(it);
 	}
 }
 void SetSquare45::Update()
@@ -47,8 +47,8 @@ void SetSquare45::Update()
 		hit = false;
 	}
 	Object::Update();
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 }

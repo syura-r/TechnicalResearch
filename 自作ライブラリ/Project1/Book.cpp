@@ -29,10 +29,10 @@ Book::Book()
 
 Book::~Book()
 {
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto& it : colliders)
 	{
-		CollisionManager::GetInstance()->RemoveCollider(*it);
-		PtrDelete(*it);
+		CollisionManager::GetInstance()->RemoveCollider(it);
+		PtrDelete(it);
 	}
 }
 
@@ -44,9 +44,9 @@ void Book::Update()
 		hit = false;
 	}
 	Object::Update();
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto& it : colliders)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 }
 

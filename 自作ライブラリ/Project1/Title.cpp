@@ -48,15 +48,13 @@ Title::Title()
 
 Title::~Title()
 {
-	auto endit = walls.end();
-	for(auto it = walls.begin();it!=endit;++it)
+	for (auto it : walls)
 	{
-		PtrDelete(*it);
+		PtrDelete(it);
 	}
-	auto endit2 = lights.end();
-	for (auto it = lights.begin(); it != endit2; ++it)
+	for (auto it : lights)
 	{
-		PtrDelete(*it);
+		PtrDelete(it);
 	}
 
 	PtrDelete(sky);
@@ -95,15 +93,13 @@ void Title::Update()
 	lightGroup->Update();
 	camera->AddPhi(0.0002f);
 	camera->Update();
-	auto endit = walls.end();
-	for (auto it = walls.begin(); it != endit; ++it)
+	for (auto it : walls)
 	{
-		(*it)->Update();
+		it->Update();
 	}
-	auto endit2 = lights.end();
-	for (auto it = lights.begin(); it != endit2; ++it)
+	for (auto it : lights)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 
 	sky->Update();
@@ -113,14 +109,13 @@ void Title::Update()
 void Title::PreDraw()
 {
 	auto endit = walls.end();
-	for (auto it = walls.begin(); it != endit; ++it)
+	for (auto it : walls)
 	{
-		(*it)->DrawReady();
+		it->DrawReady();
 	}
-	auto endit2 = lights.end();
-	for (auto it = lights.begin(); it != endit2; ++it)
+	for (auto it : lights)
 	{
-		(*it)->DrawReady();
+		it->DrawReady();
 	}
 	sky->DrawReady();
 	floor->DrawReady();
@@ -132,13 +127,13 @@ void Title::PreDraw()
 	}
 
 	PipelineState::SetPipeline(walls[0]->GetPipelineName());
-	for (auto it = walls.begin(); it != endit; ++it)
+	for (auto it : walls)
 	{
-		(*it)->Draw();
+		it->Draw();
 	}
-	for (auto it = lights.begin(); it != endit2; ++it)
+	for (auto it : lights)
 	{
-		(*it)->Draw();
+		it->Draw();
 	}
 
 	PipelineState::SetPipeline(sky->GetPipelineName());

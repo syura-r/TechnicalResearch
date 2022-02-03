@@ -48,5 +48,6 @@ struct PSOutPut
 {
     float4 color : SV_TARGET0; //通常のレンダリング結果
     float4 normal : SV_TARGET1; //法線
+    float4 depth : SV_TARGET2; //深度値	
 };
 

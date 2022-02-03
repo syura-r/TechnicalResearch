@@ -11,9 +11,9 @@ void OBJLoader::LoadModelFile(const std::string & keyName, const std::string & f
 
 void OBJLoader::DeleteModels()
 {
-	for (auto itr = models.begin(); itr != models.end(); itr++)
+	for (auto& itr : models)
 	{
-		delete (*itr).second;
-		(*itr).second = nullptr;
+		delete itr.second;
+		itr.second = nullptr;
 	}
 }

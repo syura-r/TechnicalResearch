@@ -106,14 +106,14 @@ void LevelEditor::Draw()
 
 	int i = 0;
 	//オブジェクト一覧表示
-	for (auto it = objects.begin(); it != objects.end(); ++it)
+	for (auto& it : objects)
 	{
-		std::string name = typeid(**it).name() + std::to_string(i);
+		std::string name = typeid(*it).name() + std::to_string(i);
 		if (ImGui::Button(name.c_str()))
 		{
 			if (nowSelectObject != nullptr)
 				nowSelectObject->SetColor({ 1,1,1,1 });
-			nowSelectObject = *it;
+			nowSelectObject = it;
 			nowSelectObject->SetColor({ 1,0.3f,0.3f,1 });
 		}
 		i++;
@@ -213,11 +213,10 @@ void LevelEditor::Draw()
 void LevelEditor::Clear()
 {
 	nowSelectObject.reset();
-	auto end_it = objects.end();
-	for (auto it = objects.begin(); it != end_it; ++it)
+	for (auto& it : objects)
 	{
-		ObjectManager::GetInstance()->Remove((*it).get());
-		(*it).reset();
+		ObjectManager::GetInstance()->Remove(it.get());
+		it.reset();
 	}
 	objects.clear();
 }
@@ -248,25 +247,24 @@ void LevelEditor::Save(const int slotNum)
 	//.wavファイルをバイナリモードで開く
 	file.open(filepath.c_str(), std::ios_base::binary);
 	assert(file.is_open());
-	auto end_it = objects.end();
-	for (auto it = objects.begin(); it != end_it; ++it)
+	for (auto& it : objects)
 	{
 		//クラス名の取得
-		std::string name = typeid(**it).name();
+		std::string name = typeid(*it).name();
 		name += "\n";
 		file.write(name.c_str(), name.length());//ファイルに書き込む
 		//ポジションの取得
-		Vector3 position = (*it)->GetPosition();
+		Vector3 position = it->GetPosition();
 		std::string write = "position ";
 		write += std::to_string(position.x) + " " + std::to_string(position.y) + " " + std::to_string(position.z)+"\n";
 		file.write(write.c_str(), write.length());//ファイルに書き込む
 		//スケールの取得
-		Vector3 scale = (*it)->GetScale();
+		Vector3 scale = it->GetScale();
 		write = "scale ";
 		write += std::to_string(scale.x) + " " + std::to_string(scale.y) + " " + std::to_string(scale.z) + "\n";
 		file.write(write.c_str(), write.length());//ファイルに書き込む
 		//ローテーションの取得
-		Vector3 rot = (*it)->GetRotation();
+		Vector3 rot = it->GetRotation();
 		write = "rotation ";
 		write += std::to_string(rot.x) + " " + std::to_string(rot.y) + " " + std::to_string(rot.z) + "\n";
 		file.write(write.c_str(), write.length());//ファイルに書き込む
@@ -369,14 +367,13 @@ void LevelEditor::Load(const int slotNum)
 	file.close();
 
 	int i = 0;
-	auto endIt = loadObjects.end();
-	for (auto it = loadObjects.begin(); it != endIt; ++it)
+	for (auto& it : loadObjects)
 	{
-		(*it)->SetPosition(positions[i]);
-		(*it)->SetScale(scales[i]);
-		(*it)->SetRotation(rotations[i]);
-		objects.push_front(*it);
-		ObjectManager::GetInstance()->Add((*it).get());
+		it->SetPosition(positions[i]);
+		it->SetScale(scales[i]);
+		it->SetRotation(rotations[i]);
+		objects.push_front(it);
+		ObjectManager::GetInstance()->Add(it.get());
 		i++;
 	}
 	

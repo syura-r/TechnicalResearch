@@ -202,7 +202,9 @@ void Game::CreatePipeline()
 	switch (createPipelineLevel)
 	{
 	case 0:
-		PipelineState::CreatePipeline("Sprite", SPRITE);		
+		PipelineState::CreatePipeline("Sprite", SPRITE);
+		PipelineState::CreatePipeline("DepthSprite", DepthSPRITE);
+
 		break;
 	case 1:
 		PipelineState::CreatePipeline("FBX", FBX);
@@ -297,11 +299,17 @@ void Game::LoadFinish()
 	mainResource = new TextureResource("mainTex");
 	TextureResource::SetMainResource(mainResource);
 	shadowMap = new TextureResource("shadowMap",{1920,1080}, DXGI_FORMAT_R32_FLOAT,{0,0,0,0});
-	normalResource = new TextureResource("normalTex");
-	ssaoResource = new TextureResource("SSAO", { 1920,1080 }, DXGI_FORMAT_R32_FLOAT,{1,0,0,0});
+	depthResource = new TextureResource("depthTex", { 1920,1080 }, DXGI_FORMAT_R32_FLOAT, { 1,1,1,1 },true, false);
+	halfDepthResource = new TextureResource("halfDepthTex", { 1920 / 2,1080 / 2 }, DXGI_FORMAT_R32_FLOAT);
+	normalResource = new TextureResource("normalTex",false);
+	halfNormalResource = new TextureResource("halfNormalTex", { 1920 / 2,1080 / 2 });
+	ssaoResource = new TextureResource("SSAO", { 1920 / 2,1080 / 2 }, DXGI_FORMAT_R32_FLOAT,{1,0,0,0});
 	ssao = new SSAO();
 	ssaoCombine = new SSAOCombine();
 	nowLoading = false;
+	depthTex = new Sprite();
+	normalTex = new Sprite();
+
 }
 
 void Game::DrawLoadTex()
@@ -413,6 +421,7 @@ void Game::Run()
 			{
 				mainResource->PreDraw();
 				normalResource->PreDraw(2);
+				depthResource->PreDraw(3);
 			}
 			else
 				directX->BeginDraw();
@@ -433,9 +442,16 @@ void Game::Run()
 			ParticleEmitter::Draw();
 			if (SettingParam::GetOnSSAO())
 			{
+				depthResource->PostDraw(false);
 				normalResource->PostDraw(false);
 				mainResource->PostDraw();
-				ssaoResource->PreDraw();
+				halfDepthResource->PreDraw(1, 0, 0, 1920 / 2, 1080 / 2);
+				depthTex->DrawSprite("depthTex" + std::to_string(directX->GetBbIndex()), { 0,0 }, 0, { 1,1 }, { 1,1,1,1 }, { 0,0 }, "DepthSprite");
+				halfDepthResource->PostDraw();
+				halfNormalResource->PreDraw(1, 0, 0, 1920 / 2, 1080 / 2);
+				normalTex->DrawSprite("normalTex" + std::to_string(directX->GetBbIndex()), { 0,0 }, 0, { 1,1 }, { 1,1,1,1 }, { 0,0 }, "NoAlphaToCoverageSprite");
+				halfNormalResource->PostDraw();
+				ssaoResource->PreDraw(1, 0, 0, 1920 / 2, 1080 / 2);
 				ssao->Draw();
 				ssaoResource->PostDraw();
 				directX->BeginDraw();
@@ -468,8 +484,13 @@ void Game::End()
 	PtrDelete(ssao);
 	PtrDelete(ssaoCombine);
 	PtrDelete(normalResource);
+	PtrDelete(halfNormalResource);
 	PtrDelete(ssaoResource);
 	PtrDelete(mainResource);
+	PtrDelete(halfDepthResource);
+	PtrDelete(depthResource);
+	PtrDelete(depthTex);
+	PtrDelete(normalTex);
 	sceneManeger->End();
 
 	ParticleEmitter::End();

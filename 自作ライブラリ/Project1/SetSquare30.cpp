@@ -33,10 +33,10 @@ SetSquare30::SetSquare30()
 
 SetSquare30::~SetSquare30()
 {
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		CollisionManager::GetInstance()->RemoveCollider(*it);
-		PtrDelete(*it);
+		CollisionManager::GetInstance()->RemoveCollider(it);
+		PtrDelete(it);
 	}
 }
 
@@ -48,9 +48,9 @@ void SetSquare30::Update()
 		hit = false;
 	}
 	Object::Update();
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 }
 

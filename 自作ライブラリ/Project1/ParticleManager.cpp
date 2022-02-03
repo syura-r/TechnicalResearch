@@ -30,41 +30,36 @@ void ParticleManager::Update()
 {
 	HRESULT result;
 	
-	//コンピュートシェーダーにデータを転送
+//------------------------------コンピュートシェーダーにデータを転送------------------------
 	params.clear();
 	params.resize(activParticleCount);
-	if(activParticleCount >0)
-	{
-		static int a = 0;
-		a++;
-	}
 	int paramOffset = 0;
-	for (auto it = paramData.begin(); it != paramData.end(); ++it)
+	for (auto it : paramData)
 	{
-		const int size = it->second.size();
+		const int size = it.second.size();
 		if (size <= 0)
 		{
 			continue;
 		}
-			memcpy(params.data() + paramOffset, it->second.data(), sizeof(ParticleParameter) * size);
+			memcpy(params.data() + paramOffset, it.second.data(), sizeof(ParticleParameter) * size);
 			paramOffset += size;
-		
 	}
 	verts.clear();
 	verts.resize(activParticleCount);
 	int vertOffset = 0;
-	for (auto it = vertData.begin(); it != vertData.end(); ++it)
+	for (auto it : vertData)
 	{
-		const int size = it->second.size();
+		const int size = it.second.size();
 		if (size <= 0)
 		{
 			continue;
 		}
 
-		memcpy(verts.data() + vertOffset, it->second.data(), sizeof(OutputData) * size);
+		memcpy(verts.data() + vertOffset, it.second.data(), sizeof(OutputData) * size);
 		vertOffset += size;
 	}
 	computeShade->Update(params.data(), verts.data(), activParticleCount);
+//------------------------------------------------------------------------------------------------
 	// 定数バッファへデータ転送
 	ConstBufferData* constMap = nullptr;
 	result = constBuff->Map(0, nullptr, (void**)&constMap);
@@ -94,7 +89,7 @@ void ParticleManager::Draw()
 		offset += size;
 	}
 
-	for (auto itr = vertData.begin(); itr != vertData.end();++itr)
+	for (auto itr = vertData.begin(); itr != vertData.end(); ++itr)
 	{
 		for (auto it = itr->second.begin(); it != itr->second.end();)
 		{
@@ -107,7 +102,7 @@ void ParticleManager::Draw()
 			paramData[itr->first].erase(paramData[itr->first].begin() + (int)std::distance(itr->second.begin(), it));
 			if (activParticleCount > 0)
 				activParticleCount--;
-			if(itr->second.size() == 0)
+			if (itr->second.size() == 0)
 			{
 				itr->second.clear();
 				paramData[itr->first].clear();
@@ -152,17 +147,17 @@ void ParticleManager::Draw()
 	// 定数バッファビューをセット
 	cmdList->SetGraphicsRootConstantBufferView(0, constBuff->GetGPUVirtualAddress());
 	int count = 0;
-	for (auto itr = vertData.begin(); itr != vertData.end();++itr)
+	for (auto it : vertData)
 	{
 		// パーティクルが1つもない場合
-		if (itr->second.empty())
+		if (it.second.empty())
 			continue;
-		UINT drawNum = itr->second.size();
+		UINT drawNum = it.second.size();
 		if (drawNum > vertexCount) {
 			drawNum = vertexCount;
 		}
 		// シェーダリソースビューをセット
-		cmdList->SetGraphicsRootDescriptorTable(1, Texture::GetGpuDescHandleSRV(itr->first));
+		cmdList->SetGraphicsRootDescriptorTable(1, Texture::GetGpuDescHandleSRV(it.first));
 		// 描画コマンド
 		cmdList->DrawInstanced(drawNum, 1, count, 0);
 		count += drawNum;

@@ -86,7 +86,7 @@ HRESULT DirectXLib::CreateCommands()
 {
 	HRESULT result;
 
-	for (int i = 0; i < backBuffNum; i++)
+	for (int i = 0; i < FrameCount; i++)
 	{
 		//コマンドアロケータを作成
 		result = dev->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -116,7 +116,7 @@ HRESULT DirectXLib::CreateSwapChain()
 	swapchainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;  //色情報の書式
 	swapchainDesc.SampleDesc.Count = 1; //マルチサンプルしない
 	swapchainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER; //バックバッファ用
-	swapchainDesc.BufferCount = backBuffNum; //バッファ数を3つに設定
+	swapchainDesc.BufferCount = FrameCount; //バッファ数を3つに設定
 	swapchainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; //フリップ後は破棄
 	swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 	ComPtr<IDXGISwapChain1> swapchain1;
@@ -171,12 +171,12 @@ HRESULT DirectXLib::CreateFence()
 {
 	HRESULT result;
 	//フェンスの生成
-	fence = nullptr;
-	for(int i = 0;i<backBuffNum;i++)
+	for(int i = 0;i<FrameCount;i++)
 	{
+		fence[i] = nullptr;
 		fenceVal[i] = 0;
+		result = dev->CreateFence(fenceVal[bbIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence[i]));
 	}
-	result = dev->CreateFence(fenceVal[bbIndex], D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
 	return result;
 }
 
@@ -352,24 +352,27 @@ void DirectXLib::EndDraw()
 	//バッファをフリップ(裏表の入れ替え)
 	swapchain->Present(1, 0);
 
+	//フェンスの値をGPUでセット
 	const UINT64 currentFenceValue = fenceVal[bbIndex];
-	//コマンドリストの実行完了を待つ
-	cmdQueue->Signal(fence.Get(), currentFenceValue);
+	cmdQueue->Signal(fence[bbIndex].Get(), currentFenceValue);
 
 	//バックバッファの番号を取得(3つなので0～2)
 	bbIndex = swapchain->GetCurrentBackBufferIndex();
-
-	if (fence->GetCompletedValue() < fenceVal[bbIndex])
+	
+	//フェンス値を比較してGPUの実行完了か確認
+	const auto nextVal = fence[bbIndex]->GetCompletedValue();
+	if (nextVal < fenceVal[bbIndex])
 	{
+		//実行完了を待つ
 		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
-		fence->SetEventOnCompletion(fenceVal[bbIndex], event);
+		fence[bbIndex]->SetEventOnCompletion(fenceVal[bbIndex], event);
 		WaitForSingleObject(event, INFINITE);
 		CloseHandle(event);
 	}
 	cmdAllocator[bbIndex]->Reset(); //キューをクリア
 	cmdList->Reset(cmdAllocator[bbIndex].Get(), nullptr);		//再びコマンドリストを貯める準備
 
-	fenceVal[bbIndex] = currentFenceValue + 1;
+	fenceVal[bbIndex]++;
 
 	// DirectX 毎フレーム処理 ここまで
 
@@ -377,12 +380,12 @@ void DirectXLib::EndDraw()
 
 void DirectXLib::End()
 {
-	for (int i = 0; i < backBuffNum; i++)
+	for (int i = 0; i < FrameCount; i++)
 	{
-		cmdQueue->Signal(fence.Get(), fenceVal[i]);
+		cmdQueue->Signal(fence[bbIndex].Get(), fenceVal[i]);
 
 		HANDLE event = CreateEvent(nullptr, false, false, nullptr);
-		fence->SetEventOnCompletion(fenceVal[i], event);
+		fence[bbIndex]->SetEventOnCompletion(fenceVal[i], event);
 		WaitForSingleObjectEx(event, INFINITE, FALSE);
 
 		CloseHandle(event);

@@ -123,10 +123,10 @@ void SceneManager::PostDraw()
 
 void SceneManager::End()
 {
-	for (auto itr = scenes.begin(); itr != scenes.end(); itr++)
+	for (auto itr : scenes)
 	{
-		delete (*itr).second;
-		(*itr).second = nullptr;
+		delete itr.second;
+		itr.second = nullptr;
 	}
 
 	PtrDelete(resource);

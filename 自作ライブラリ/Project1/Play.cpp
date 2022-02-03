@@ -213,13 +213,11 @@ Play::Play()
 	file.close();
 
 	int i = 0;
-	auto endIt = loadObjects.end();
-	for (auto it = loadObjects.begin(); it != endIt; ++it)
-	{
-		(*it)->SetPosition(positions[i]);
-		(*it)->SetScale(scales[i]);
-		(*it)->SetRotation(rotations[i]);
-		ObjectManager::GetInstance()->Add(*it);
+	for (auto& it : loadObjects) {
+		it->SetPosition(positions[i]);
+		it->SetScale(scales[i]);
+		it->SetRotation(rotations[i]);
+		ObjectManager::GetInstance()->Add(it);
 		i++;
 	}
 //---------------------------------------------------------------------------

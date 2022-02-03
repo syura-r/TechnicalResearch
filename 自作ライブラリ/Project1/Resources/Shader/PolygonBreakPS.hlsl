@@ -143,6 +143,7 @@ PSOutPut PSmain(GSOutput input) : SV_TARGET
     outPut.color = pow((shadecolor * texcolor * color), 1.0 / 2.2);
     outPut.normal.rgb = float3((input.normal.xyz + 1.0f) / 2.0f);
     outPut.normal.a = 1;
+    outPut.depth = float4(input.svpos.z, input.svpos.z, input.svpos.z, 1.0f);
     return outPut;
    // return (shadecolor * texcolor * color) * lerp(smoothstep(1.0f - TurningPoint, 1.0f, 1 - input.destruction), 1, step(1, _On4Vertex))
    // +float4(1, 1, 1, 1) * smoothstep(0, TurningPoint, input.destruction) * lerp(1, 1 - step(TurningPoint, input.destruction), step(1, _On4Vertex))

@@ -35,16 +35,6 @@ float PSmain(VSOutput input) : SV_Target
     float3 norm = normalize((normtex.Sample(smp, input.uv).xyz * 2) - 1);
     const float radius = 0.05f;
 
-
-    //float4 vBilinearWeights[4] =
-    //{
-    //            //0   //1  //2    //3
-    //    float4( 9/16, 3/16, 3/16, 1/16), //0
-	   // float4( 3/16, 9/16, 1/16, 3/16), //1
-	   // float4( 3/16, 1/16, 9/16, 3/16), //2
-	   // float4( 1/16, 3/16, 3/16, 9/16), //3
-    	
-    //};
 	if(dp<1.0f)
     {
         for (int i = 0; i < trycnt; ++i)
@@ -65,3 +55,62 @@ float PSmain(VSOutput input) : SV_Target
     //float resultAo = lerp(ao,0, step( 1,dp));
     return 1.0f - ao;
 }
+
+
+//const float2 c_offset[4] =
+//{
+//    float2(0., 0),
+//    float2(0., 1),
+//    float2(1., 0),
+//    float2(1., 1)
+//};
+
+//float4 JoinedBilateralUpsample(float2 P)
+//{ // based on: https://johanneskopf.de/publications/jbu/paper/FinalPaper_0185.pdf
+//  //           https://bartwronski.com/2019/09/22/local-linear-models-guided-filter/
+//  //		   https://www.shadertoy.com/view/MllSzX
+    
+//    float2 halfP = 0.5 * P;
+//    float2 c_textureSize = iChannelResolution[2].xy;
+//    float2 c_texelSize = 1.0 / c_textureSize;
+//    float2 pixel = halfP * c_textureSize + 0.5;
+//    float2 f = fract(pixel);
+//    pixel = (floor(pixel) / c_textureSize) - float2(c_texelSize / 2.0);
+    
+//    float4 I = textureLod(iChannel1, P, 0.0);
+        
+//    float4 Z00 = textureLod(iChannel2, pixel + c_texelSize * c_offset[0], 0.0);
+//    float4 Z01 = textureLod(iChannel2, pixel + c_texelSize * c_offset[1], 0.0);
+//    float4 Z10 = textureLod(iChannel2, pixel + c_texelSize * c_offset[2], 0.0);
+//    float4 Z11 = textureLod(iChannel2, pixel + c_texelSize * c_offset[3], 0.0);
+    
+//    float tex00 = textureLod(iChannel0, pixel + c_texelSize * c_offset[0], 0.0).r;
+//    float tex01 = textureLod(iChannel0, pixel + c_texelSize * c_offset[1], 0.0).r;
+//    float tex10 = textureLod(iChannel0, pixel + c_texelSize * c_offset[2], 0.0).r;
+//    float tex11 = textureLod(iChannel0, pixel + c_texelSize * c_offset[3], 0.0).r;
+       
+//    float sigmaV = 0.002;
+//    //    wXX = bilateral gaussian weight from depth * bilinear weight
+//    float w00 = Gaussian(sigmaV, abs(I.w - Z00.w)) * (1. - f.x) * (1. - f.y);
+//    float w01 = Gaussian(sigmaV, abs(I.w - Z01.w)) * (1. - f.x) * f.y;
+//    float w10 = Gaussian(sigmaV, abs(I.w - Z10.w)) * f.x * (1. - f.y);
+//    float w11 = Gaussian(sigmaV, abs(I.w - Z11.w)) * f.x * f.y;
+        
+//    return float4((w00 * tex00 + w01 * tex01 + w10 * tex10 + w11 * tex11) / (w00 + w01 + w10 + w11));
+//}
+
+//void mainImage(out float4 fragColor, in float2 fragCoord)
+//{
+//    float2 uv = F.xy / R.xy;
+//    float gamma = 0.4545;
+    
+//    fragColor = JoinedBilateralUpsample(uv);
+    
+//    fragColor *= smoothstep(0.0, 0.001, abs(uv.x - 0.25));
+//    fragColor *= smoothstep(0.0, 0.001, abs(uv.x - 0.50));
+//    fragColor *= smoothstep(0.0, 0.001, abs(uv.x - 0.75));
+    
+//    gamma = 4.0; // exaggerate AO results   
+       
+//    fragColor = float4(pow(fragColor.rgb, float3(gamma,gamma,gamma)), 1.0);
+//}

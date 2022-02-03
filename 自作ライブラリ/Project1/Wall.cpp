@@ -17,9 +17,9 @@ Wall::Wall(const std::string& modelName)
 
 Wall::~Wall()
 {
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		PtrDelete(*it);
+		PtrDelete(it);
 	}
 
 }
@@ -33,9 +33,9 @@ void Wall::Update()
 	}
 
 	Object::Update();
-	for (auto it = colliders.begin(); it != colliders.end(); ++it)
+	for (auto it : colliders)
 	{
-		(*it)->Update();
+		it->Update();
 	}
 }
 

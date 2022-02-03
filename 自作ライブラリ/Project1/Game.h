@@ -44,9 +44,14 @@ private:
 	SSAOCombine* ssaoCombine = nullptr;
 
 	TextureResource* normalResource = nullptr;
+	TextureResource* halfNormalResource = nullptr;
 	TextureResource* mainResource = nullptr;
+	TextureResource* depthResource = nullptr;
+	TextureResource* halfDepthResource = nullptr;
 
 	TextureResource* ssaoResource = nullptr;
+	Sprite* depthTex = nullptr;
+	Sprite* normalTex = nullptr;
 
 	float dir[3] = { 1.0f,-0.60f,0.0f };
 

@@ -37,7 +37,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertBuff;//頂点バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff;//定数バッファ
 	Microsoft::WRL::ComPtr<ID3D12Resource> constBuff2[3];//定数バッファ
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> depthSRVHeap;
+	//Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> depthSRVHeap;
 	int bbindex = 0;
 private:
 	static Camera* camera;
