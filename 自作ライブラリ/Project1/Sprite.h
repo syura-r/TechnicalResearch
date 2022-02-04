@@ -48,9 +48,9 @@ protected:
 	XMMATRIX spritePosition{};
 	XMMATRIX spriteMatScale{};
 	XMMATRIX spriteMatWorld{};
-	VERTEX vertices[4];
+	std::array<VERTEX,4> vertices;
 	ComPtr<ID3D12Resource> vertBuff;//頂点バッファ
-	ComPtr<ID3D12Resource> constBuff[3];//定数バッファ
+	std::array<ComPtr<ID3D12Resource>, 3> constBuff;//定数バッファ
 	D3D12_VERTEX_BUFFER_VIEW vbView{};//頂点バッファビュー
 	
 	bool rect = false;//切り出しをしているかどうか

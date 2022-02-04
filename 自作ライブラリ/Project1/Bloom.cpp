@@ -1,12 +1,12 @@
-#include "PostEffect.h"
+#include "Bloom.h"
 
 #include "Texture.h"
 #include "Vector.h"
 #include"DirectXLib.h"
 #include "Input.h"
 #include "PipelineState.h"
-Window* PostEffect::window = nullptr;
-PostEffect::PostEffect()
+Window* Bloom::window = nullptr;
+Bloom::Bloom()
 {
 	HRESULT result;
 	
@@ -35,7 +35,7 @@ PostEffect::PostEffect()
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result))
 	{
-		memcpy(vertMap, vertices, sizeof(vertices));
+		memcpy(vertMap, vertices.data(), sizeof(vertices));
 		vertBuff->Unmap(0, nullptr);
 	}
 
@@ -56,7 +56,7 @@ PostEffect::PostEffect()
 	Initialize();
 }
 
-void PostEffect::Initialize()
+void Bloom::Initialize()
 {
 	HRESULT result;
 	auto dev = DirectXLib::GetInstance()->GetDevice();
@@ -184,7 +184,7 @@ void PostEffect::Initialize()
 
 }
 
-void PostEffect::DrawShrinkTextureForBlur()
+void Bloom::DrawShrinkTextureForBlur()
 {
 	auto dev = DirectXLib::GetInstance()->GetDevice();
 	auto cmdList = DirectXLib::GetInstance()->GetCommandList();
@@ -263,7 +263,7 @@ void PostEffect::DrawShrinkTextureForBlur()
 
 }
 
-void PostEffect::PreDraw()
+void Bloom::PreDraw()
 {
 	auto dev = DirectXLib::GetInstance()->GetDevice();
 	auto cmdList = DirectXLib::GetInstance()->GetCommandList();
@@ -316,7 +316,7 @@ void PostEffect::PreDraw()
 	cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 }
 
-void PostEffect::PostDraw()
+void Bloom::PostDraw()
 {
 	auto cmdList = DirectXLib::GetInstance()->GetCommandList();
 	for (int i = 0; i < 2; i++)
@@ -328,7 +328,7 @@ void PostEffect::PostDraw()
 
 }
 
-void PostEffect::Draw()
+void Bloom::Draw()
 {
 
 	auto dev = DirectXLib::GetInstance()->GetDevice();
@@ -349,7 +349,7 @@ void PostEffect::Draw()
 	constBuff->Unmap(0, nullptr);
 
 	//パイプラインのセット
-	PipelineState::SetPipeline("PostEffect");
+	PipelineState::SetPipeline("Bloom");
 
 	cmdList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 

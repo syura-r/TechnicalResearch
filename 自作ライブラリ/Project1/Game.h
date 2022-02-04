@@ -39,7 +39,7 @@ private:
 	ComputeWrapper* computeWrapper = nullptr;
 	//DebugCamera* camera = nullptr;
 	Vector3 cameraPos;
-	//PostEffect* postEffect = nullptr;
+	//Bloom* postEffect = nullptr;
 	std::unique_ptr <LightCamera> lightCamera = nullptr;
 	std::unique_ptr <TextureResource> shadowMap = nullptr;
 	std::unique_ptr <SSAO> ssao = nullptr;

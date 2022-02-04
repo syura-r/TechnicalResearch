@@ -31,7 +31,7 @@ void TextureResource::Initialize(const std::string& name)
 	resDesc.Width = resourceWidth;
 
 	//レンダリング時のクリア値と同じ値
-	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(format, clearColor);
+	D3D12_CLEAR_VALUE clearValue = CD3DX12_CLEAR_VALUE(format, clearColor.data());
 
 	HRESULT result;
 
@@ -231,7 +231,7 @@ void TextureResource::PreDraw(const UINT arg_numRTD, const float topLeftX, const
 		cmdList->RSSetViewports(1, &viewport);
 		cmdList->RSSetScissorRects(1, &scissorRect);
 
-		cmdList->ClearRenderTargetView(rtvHeapPointer, clearColor, 0, nullptr);
+		cmdList->ClearRenderTargetView(rtvHeapPointer, clearColor.data(), 0, nullptr);
 
 		cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}
@@ -276,7 +276,7 @@ void TextureResource::PreDraw(const UINT arg_numRTD, const float topLeftX, const
 		cmdList->RSSetViewports(arg_numRTD, viewports.data());
 		cmdList->RSSetScissorRects(arg_numRTD, scissorRects.data());
 
-		cmdList->ClearRenderTargetView(rtvHeapPointer[arg_numRTD - 1], clearColor, 0, nullptr);
+		cmdList->ClearRenderTargetView(rtvHeapPointer[arg_numRTD - 1], clearColor.data(), 0, nullptr);
 
 		//cmdList->ClearDepthStencilView(dsvH, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 	}

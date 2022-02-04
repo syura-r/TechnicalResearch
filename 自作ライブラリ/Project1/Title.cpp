@@ -15,9 +15,9 @@ Title::Title()
 	lights.clear();
 	for (int i = 0; i < 9; i++)
 	{
-		lights.push_back(std::make_unique<Fluorescent>(lightPos[i]));
+		lights.push_back(std::make_unique<Fluorescent>(lightPos[i].data()));
 		lightGroup->SetPointLightActive(i, true);
-		lightGroup->SetPointLightPos(i, lightPos[i] + Vector3{ 0,3,0 });
+		lightGroup->SetPointLightPos(i, lightPos[i].data() + Vector3{ 0,3,0 });
 	}
 	std::unique_ptr<Wall>blackBoard = std::make_unique<Wall>("blackBoard");
 	blackBoard->SetPosition({ 0,-4.3f,0 });

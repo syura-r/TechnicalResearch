@@ -1,5 +1,6 @@
 #pragma once
 #define DIRECTINPUT_VERSION 0x0800 //DirectInputのバージョン
+#include <array>
 #include <dinput.h>
 #include <Windows.h>
 #include <wrl.h>
@@ -112,8 +113,8 @@ private:
 	static ComPtr<IDirectInputDevice8> devkeyboard;
 	static ComPtr<IDirectInputDevice8> devPad;
 	static ComPtr<IDirectInputDevice8> devMouse;
-	static BYTE keys[256];
-	static BYTE prevKeys[256];
+	static std::array<BYTE,256> keys;
+	static std::array<BYTE, 256> prevKeys;
 	static DIMOUSESTATE2 mouseState ;
 	static DIMOUSESTATE2 mouseStatePre;
 	static int num;//パッドの初期化に使用

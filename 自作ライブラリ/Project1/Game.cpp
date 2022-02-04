@@ -211,7 +211,7 @@ void Game::CreatePipeline()
 		break;
 	case 2:
 		PipelineState::CreatePipeline("Particle", PARTICLE, ADD);
-		//PipelineState::CreatePipeline("PostEffect", BasePostEffect);
+		//PipelineState::CreatePipeline("Bloom", BasePostEffect);
 		PipelineState::CreatePipeline("FBXPolygonBreak", FBXPolygonBreak);
 
 		
@@ -291,8 +291,8 @@ void Game::LoadFinish()
 	sceneManeger->Initialize();
 	sceneManeger->Add(Scene::SCENE::Title, new Title());
 	sceneManeger->Add(Scene::SCENE::Play, new Play());
-	sceneManeger->Add(Scene::SCENE::Ending, new Ending());
-	sceneManeger->Change(Scene::SCENE::Play);
+	//sceneManeger->Add(Scene::SCENE::Ending, new Ending());
+	sceneManeger->Change(Scene::SCENE::Title);
 	
 	mainResource = std::make_unique<TextureResource>("mainTex");
 	TextureResource::SetMainResource(mainResource.get());

@@ -56,34 +56,34 @@ Play::Play()
 	Wall* backWall = new Wall("backWall");
 	for (int i = 0; i < 2; i++)
 	{
-		backWall->AddCollider(BackWallColliderOffset[i], BackWallColliderScale[i]);
+		backWall->AddCollider(BackWallColliderOffset[i].data(), BackWallColliderScale[i].data());
 	}
 	Wall* leftWall = new Wall("leftWall");
 	for (int i = 0; i < 2; i++)
 	{
-		leftWall->AddCollider(LeftWallColliderOffset[i], LeftWallColliderScale[i]);
+		leftWall->AddCollider(LeftWallColliderOffset[i].data(), LeftWallColliderScale[i].data());
 	}
 	Wall* rightWall = new Wall("rightWall");
 	for (int i = 0; i < 7; i++)
 	{
-		rightWall->AddCollider(RightWallColliderOffset[i], RightWallColliderScale[i]);
+		rightWall->AddCollider(RightWallColliderOffset[i].data(), RightWallColliderScale[i].data());
 	}
 	Wall* frontWall = new Wall("frontWall");
 	for (int i = 0; i < 2; i++)
 	{
-		frontWall->AddCollider(FrontWallColliderOffset[i], FrontWallColliderScale[i]);
+		frontWall->AddCollider(FrontWallColliderOffset[i].data(), FrontWallColliderScale[i].data());
 	}
 	Wall* blackBoard = new Wall("blackBoard");
 	blackBoard->SetPosition({ 0,-4.3f,0 });
 	blackBoard->Update();
 	for (int i = 0; i < 7; i++)
 	{
-		blackBoard->AddCollider(BlackBoardColliderOffset[i], BlackBoardColliderScale[i]);
+		blackBoard->AddCollider(BlackBoardColliderOffset[i].data(), BlackBoardColliderScale[i].data());
 	}
 	Wall* locker = new Wall("locker");
 	for (int i = 0; i < 16; i++)
 	{
-		locker->AddCollider(LockerColliderOffset[i], LockerColliderScale[i]);
+		locker->AddCollider(LockerColliderOffset[i].data(), LockerColliderScale[i].data());
 	}
 	objectManager->Add(ceiling);
 	objectManager->Add(backWall);
@@ -97,10 +97,10 @@ Play::Play()
 	for (int i = 0; i < 9; i++)
 	{
 		Fluorescent* light = nullptr;
-		light = new Fluorescent(lightPos[i]);
+		light = new Fluorescent(lightPos[i].data());
 		objectManager->Add(light);
 		lightGroup->SetPointLightActive(i, true);
-		lightGroup->SetPointLightPos(i, lightPos[i] - Vector3{0,3,0});
+		lightGroup->SetPointLightPos(i, lightPos[i].data() - Vector3{0,3,0});
 	}
 	objectManager->Add(new Sky());
 	goal =  std::make_unique<Goal>();

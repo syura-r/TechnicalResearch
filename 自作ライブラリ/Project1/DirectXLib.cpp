@@ -4,7 +4,7 @@
 #include <imgui_impl_dx12.h>
 
 #include "ComputeWrapper.h"
-#include "PostEffect.h"
+#include "Bloom.h"
 
 #define InterlockedGetValue(object) InterlockedCompareExchange(object, 0, 0)
 

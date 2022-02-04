@@ -22,7 +22,7 @@ private:
 	static const int fontWidth = 9;		//フォント画像内1文字分ぼ横幅
 	static const int fontHeight = 18;	//フォント画像内1文字分の縦幅
 	static const int fontLineCount = 14;//フォント画像内1行分の文字数
-	static std::unique_ptr<Sprite> spriteDatas[maxCharCount];
+	static std::array<std::unique_ptr<Sprite>,maxCharCount> spriteData;
 	static std::vector<Status> statues;
 	static int spriteIndex;
 };

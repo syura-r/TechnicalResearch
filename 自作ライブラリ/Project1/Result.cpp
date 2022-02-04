@@ -36,8 +36,13 @@ void Result::Initialize(const float SecondTime, const float MinuteTime, const in
 {
 	close = false;
 	starNum = 1;
+	oneMinuteClear.color = { 1,1,1,1 };
 	retry.color = { 1,1,1,0 };
 	returnTitleTex.color = { 1,1,1,0 };
+	getAchieveTex.color = { 1,1,1,0 };
+	denialTexScale = { 0,3 };
+	star.color = { 1, 1, 1, 0 };
+	denialTex.color = { 0.6f,0.6f,0.6f,1 };
 	timeSpriteColor = { 1,1,1,0 };
 	openCounter = 0;
 	viewCounter = 0;

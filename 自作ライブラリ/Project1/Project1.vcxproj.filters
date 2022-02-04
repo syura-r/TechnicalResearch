@@ -342,7 +342,7 @@
     <ClCompile Include="ComputeWrapper.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="PostEffect.cpp">
+    <ClCompile Include="Bloom.cpp">
       <Filter>ソース ファイル\Tool</Filter>
     </ClCompile>
     <ClCompile Include="ShadowMap.cpp">
@@ -587,9 +587,6 @@
     <ClInclude Include="SetSquare45.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
-    <ClInclude Include="ColliderEditor.h">
-      <Filter>ヘッダー ファイル\Collision</Filter>
-    </ClInclude>
     <ClInclude Include="Book.h">
       <Filter>ヘッダー ファイル\GameObject</Filter>
     </ClInclude>
@@ -656,7 +653,7 @@
     <ClInclude Include="PlaneCollider.h">
       <Filter>ヘッダー ファイル\Collision</Filter>
     </ClInclude>
-    <ClInclude Include="PostEffect.h">
+    <ClInclude Include="Bloom.h">
       <Filter>ヘッダー ファイル\PostEffect</Filter>
     </ClInclude>
     <ClInclude Include="Result.h">

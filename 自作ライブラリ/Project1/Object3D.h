@@ -93,9 +93,9 @@ public:
 	//親オブジェクトをセット
 	void SetParent(Object3D* parent) { this->parent = parent; }
 private://メンバ変数
-	ComPtr<ID3D12Resource> constBuff[3]; // 定数バッファ
-	ComPtr<ID3D12Resource> lCameraConstBuff[3]; // 定数バッファ
-	ComPtr<ID3D12Resource> constCameraBuff[3];
+	std::array<ComPtr<ID3D12Resource>, 3> constBuff; // 定数バッファ
+	std::array<ComPtr<ID3D12Resource>,3> lCameraConstBuff; // 定数バッファ
+	std::array<ComPtr<ID3D12Resource>,3> constCameraBuff;
 	// ローカルワールド変換行列
 	XMMATRIX matWorld;
 	//ワールド行列に対する回転角度

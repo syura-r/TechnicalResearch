@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include<DirectXMath.h>
 #include"Vector.h"
 
@@ -6,7 +7,7 @@ struct Matrix4
 {
 public:
 
-	float m[4][4] = 
+	std::array<std::array<float,4>,4> m = 
 	{
 	1,0,0,0,
 	0,1,0,0,

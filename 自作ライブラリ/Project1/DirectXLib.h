@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <vector>
@@ -17,7 +18,7 @@ class Window;
 class DirectXLib
 {
 private:
-	//friend class PostEffect;
+	//friend class Bloom;
 	DirectXLib() = default;
 	DirectXLib(const DirectXLib&) = delete;
 	~DirectXLib() = default;
@@ -41,7 +42,7 @@ private:
 	std::vector< ComPtr <IDXGIAdapter>> adapters;
 	ComPtr<IDXGIFactory6> dxgiFactory;
 	ComPtr<IDXGISwapChain4 > swapchain;
-	ComPtr<ID3D12CommandAllocator> cmdAllocator[FrameCount];
+	std::array<ComPtr<ID3D12CommandAllocator>,FrameCount> cmdAllocator;
 	ComPtr < ID3D12CommandQueue> cmdQueue;
 	ComPtr < ID3D12DescriptorHeap> rtvHeaps;
 	ComPtr<ID3D12DescriptorHeap> dsvHeap;
@@ -50,8 +51,8 @@ private:
 	ComPtr<ID3D12DescriptorHeap> imguiHeap;
 
 	std::vector< ComPtr<ID3D12Resource>> backBuffers;
-	ComPtr < ID3D12Fence> fence[FrameCount];
-	UINT64 fenceVal[FrameCount];
+	std::array<ComPtr < ID3D12Fence>, FrameCount> fence;
+	std::array < UINT64, FrameCount > fenceVal;
 
 	UINT bbIndex;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvH;
@@ -68,7 +69,7 @@ public:
 	ComPtr<ID3D12DescriptorHeap>& GetDsvHeap() { return dsvHeap; }
 	ComPtr < ID3D12DescriptorHeap>& GetRtvHeaps() { return  rtvHeaps; }
 	ComPtr < ID3D12Fence>& GetFence() { return fence[bbIndex]; }
-	UINT64 volatile& GetCurrentFenceVal() { return fenceVal[FrameCount]; }
+	UINT64& GetCurrentFenceVal() { return fenceVal[bbIndex]; }
 	
 	void ImguiDraw();
 	void BeginDraw();

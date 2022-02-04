@@ -44,15 +44,15 @@ void Audio::LoadFile(const std::string& keyName, const std::string& fileName)
 	//RIFFヘッダーの読み込み
 	file.read((char*)&waveFile.riffheader, sizeof(waveFile.riffheader));
 	//ファイルがRIFFかチェック
-	if (strncmp(waveFile.riffheader.chunk.id, "RIFF", 4) != 0)assert(0);
+	if (strncmp(waveFile.riffheader.chunk.id.data(), "RIFF", 4) != 0)assert(0);
 
 	//Formatチャンクの読み込み
 	file.read((char*)&waveFile.fChunk, sizeof(waveFile.fChunk));
-	if (strncmp(waveFile.fChunk.chunk.id, "fmt ", 4) != 0)assert(0);
+	if (strncmp(waveFile.fChunk.chunk.id.data(), "fmt ", 4) != 0)assert(0);
 
 	//Dataチャンクの読み込み
 	file.read((char*)&waveFile.chunk, sizeof(waveFile.chunk));
-	if (strncmp(waveFile.chunk.id, "data", 4) != 0)assert(0);
+	if (strncmp(waveFile.chunk.id.data(), "data", 4) != 0)assert(0);
 
 	//Dataチャンクのデータ部(波形データ)の読み込み
 	waveFile.buff = new char[waveFile.chunk.size];

@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+
 #include "Sprite.h"
 #include "Vector.h"
 
@@ -35,7 +37,7 @@ private:
 	SpriteStruct startTex;
 	SpriteStruct endTex;
 	static const int ParticleNumber = 50;
-	SpriteStruct particles[ParticleNumber];
+	std::array<SpriteStruct,ParticleNumber> particles;
 	struct ParticleStatus
 	{
 		Vector2 basePos;
@@ -46,7 +48,7 @@ private:
 		int selectMoveVal = 1;
 	};
 	
-	ParticleStatus particleStatues[ParticleNumber];
+	std::array<ParticleStatus, ParticleNumber> particleStatues;
 	int select;
 	//決定時にパーティクルを飛ばすフラグ
 	bool decision;

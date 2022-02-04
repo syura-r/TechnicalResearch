@@ -34,8 +34,8 @@ protected:
 		XMFLOAT3 cameraPos;
 	};
 
-	static ComPtr<ID3D12Resource> constBuff[3]; // 定数バッファ
+	static std::array<ComPtr<ID3D12Resource>,3> constBuff; // 定数バッファ
 	static ConstBuffData sendData;
-	static ComPtr<ID3D12Resource> constCameraBuff[3]; // 定数バッファ
+	static std::array<ComPtr<ID3D12Resource>, 3> constCameraBuff; // 定数バッファ
 };
 

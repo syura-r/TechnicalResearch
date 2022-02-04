@@ -33,7 +33,7 @@ void Wall::Update()
 	}
 }
 
-void Wall::AddCollider(const float offset[3], const float colScale[3])
+void Wall::AddCollider(const float* offset, const float* colScale)
 {
 	auto adjustScale = scale / 3.5f;//scale‚ª3.5‚Ì‚ğŠî€‚É’²ß‚µ‚½’l‚¾‚©‚çscale‚ğ3.5‚ÅŠ„‚Á‚Ä‚é
 	adjustScale.z *= -1;

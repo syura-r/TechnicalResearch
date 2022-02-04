@@ -38,7 +38,7 @@ Matrix4::Matrix4(const float m00, const float m01, const float m02, const float 
 	 m20, m21, m22, m23,
 	 m30, m31, m32, m33
 	};
-	memcpy(m, mat, sizeof(float) * 4 * 4);
+	memcpy(m.data(), mat, sizeof(float) * 4 * 4);
 }
 
 DirectX::XMMATRIX Matrix4::convertToXMMATRIX()

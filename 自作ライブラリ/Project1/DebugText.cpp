@@ -1,25 +1,27 @@
 #include "DebugText.h"
-std::unique_ptr<Sprite> DebugText::spriteDatas[maxCharCount] = {};
+
+#include <array>
+std::array<std::unique_ptr<Sprite>, maxCharCount> DebugText::spriteData = {};
 std::vector<Status> DebugText::statues = {};
 int  DebugText::spriteIndex = 0;
 
 
 void DebugText::Initialize()
 {
-	for (int i = 0; i < _countof(spriteDatas); i++)
+	for (int i = 0; i < spriteData.size(); i++)
 	{
-		spriteDatas[i] = nullptr;
+		spriteData[i] = nullptr;
 	}
-	statues.resize(_countof(spriteDatas));
+	statues.resize(spriteData.size());
 }
 
 void DebugText::Print(const std::string & text,const float& posX,const float& posY,const float& scale)
 {
 	for (int i = 0; i < text.size(); i++)
 	{
-		if (spriteDatas[spriteIndex].get() == nullptr)
+		if (spriteData[spriteIndex].get() == nullptr)
 		{
-			spriteDatas[spriteIndex] = std::make_unique<Sprite>();
+			spriteData[spriteIndex] = std::make_unique<Sprite>();
 		}
 		if (spriteIndex >= maxCharCount)
 		{
@@ -40,7 +42,7 @@ void DebugText::Print(const std::string & text,const float& posX,const float& po
 		status.position = XMFLOAT2(posX + fontWidth * scale*scale * i, posY);
 		status.scale = XMFLOAT2{ scale,scale };
 		statues[spriteIndex] = status;
-		spriteDatas[spriteIndex]->SpriteSetTextureRect("Debug",fontIndexX*fontWidth, fontIndexY*fontHeight, fontWidth, fontHeight);
+		spriteData[spriteIndex]->SpriteSetTextureRect("Debug",fontIndexX*fontWidth, fontIndexY*fontHeight, fontWidth, fontHeight);
 		spriteIndex++;
 	}
 
@@ -50,7 +52,7 @@ void DebugText::Draw(const XMFLOAT4& color)
 {
 	for (int i = 0; i < spriteIndex; i++)
 	{
-		spriteDatas[i]->DrawSprite("Debug", statues[i].position, 0.0f, statues[i].scale, color);
+		spriteData[i]->DrawSprite("Debug", statues[i].position, 0.0f, statues[i].scale, color);
 	}
 	spriteIndex = 0;
 }

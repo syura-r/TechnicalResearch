@@ -12,7 +12,7 @@ public:
 private:
 	std::vector<std::unique_ptr<BoxCollider>> colliders;
 	static const int ColliderNum = 16;
-	float colliderOffset[ColliderNum][3] =
+	std::array<std::array<float, 3>, ColliderNum> colliderOffset =
 	{
 		- 3.750000f, -0.197000f, -0.909000f,
 		- 0.021000f, -0.197000f, 0.048000f,
@@ -29,8 +29,10 @@ private:
 		- 1.832000f, -0.189000f, -2.758000f,
 		8.737000f, -0.189000f, 2.211000f,
 		8.653000f, -0.189000f, 2.632000f,
-		8.526000f, -0.189000f, 2.505000f, };
-	float colliderScale[ColliderNum][3]
+		8.526000f, -0.189000f, 2.505000f,
+	};
+
+	std::array<std::array<float, 3>, ColliderNum> colliderScale =
 	{
 		0.509000f, 0.099000f, 3.579000f,
 		0.485000f, 0.099000f, 2.215000f,
@@ -49,7 +51,7 @@ private:
 		0.821000f, 0.095000f, 0.047000f,
 		0.663000f, 0.095000f, 0.079000f,
 	};
-	float colliderRotation[ColliderNum][3]
+	std::array<std::array<float, 3>, ColliderNum> colliderRotation =
 	{
 		0.000000f, 0.000000f, 0.000000f,
 		0.000000f, 0.000000f, 0.000000f,

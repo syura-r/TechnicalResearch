@@ -7,8 +7,8 @@
 #include"OBJLoader.h"
 #include "Texture.h"
 
-ComPtr<ID3D12Resource> GSShaderTestObj::constBuff[3] = {}; // 定数バッファ
-ComPtr<ID3D12Resource> GSShaderTestObj::constCameraBuff[3] = {}; // 定数バッファ
+std::array<ComPtr<ID3D12Resource>, 3> GSShaderTestObj::constBuff = {}; // 定数バッファ
+std::array<ComPtr<ID3D12Resource>, 3> GSShaderTestObj::constCameraBuff = {}; // 定数バッファ
 
 GSShaderTestObj::ConstBuffData GSShaderTestObj::sendData = {0,1.00f,0.00f,0.10f,1,0,0,1,{0,0,0},0.1f,{},1.4f,0};
 

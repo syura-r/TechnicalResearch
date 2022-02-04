@@ -29,8 +29,8 @@ private:
 		XMFLOAT3 pad;
 	};
 	float offsetTime;
-	ComPtr<ID3D12Resource> constBuff[3]; // 定数バッファ
-	std::unique_ptr <BoxCollider> colliders[3];
+	std::array<ComPtr<ID3D12Resource>,3> constBuff; // 定数バッファ
+	std::array<std::unique_ptr <BoxCollider>, 3> colliders;
 
 };
 

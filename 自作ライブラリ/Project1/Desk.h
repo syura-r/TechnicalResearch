@@ -10,7 +10,7 @@ public:
 	void Update()override;
 private:
 	std::vector<std::unique_ptr<BoxCollider>> colliders;
-	float colliderOffset[10][3] =
+	std::array<std::array<float, 3>, 10> colliderOffset =
 	{
 		-1.318f, 1.510f, 0.960f,
 		0.000f , 3.140f, 0.000f,
@@ -23,7 +23,7 @@ private:
 		0.000f , 2.774f, 0.019f,
 		0.000f , 2.358f, 0.906f,
 	};
-	float colliderScale[10][3]
+	std::array<std::array<float, 3>, 10> colliderScale =
 	{
 		0.081f , 1.500f , 0.079f,
 		1.477f , 0.058f , 1.177f,
@@ -37,7 +37,7 @@ private:
 		1.308f , 0.040f , 0.051f,
 
 	};
-	float colliderRotation[10][3]
+	std::array<std::array<float, 3>, 10> colliderRotation =
 	{
 		-4.4f , 0 , 0,
 		0     , 0 , 0,

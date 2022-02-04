@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+
 #include "BoxCollider.h"
 #include "DebugCamera.h"
 #include "FBXModel.h"
@@ -32,7 +34,7 @@ private:
 		XMFLOAT3 cameraPos;
 	};
 
-	ComPtr<ID3D12Resource> constBuff[3]; // 定数バッファ
+	std::array<ComPtr<ID3D12Resource>, 3> constBuff; // 定数バッファ
 	ConstBuffData sendData;
 	ComPtr<ID3D12Resource> constCameraBuff; // 定数バッファ
 

@@ -91,7 +91,7 @@ void Sprite::DrawSprite(const std::string & name, const XMFLOAT2 & position, con
 	VERTEX* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
-	memcpy(vertMap, vertices, sizeof(vertices));
+	memcpy(vertMap, vertices.data(), sizeof(vertices));
 	vertBuff->Unmap(0, nullptr);
 
 	//ワールド行列の更新
@@ -150,7 +150,7 @@ void Sprite::NoPipelineDraw(const std::string& name, const XMFLOAT2& position, c
 	VERTEX* vertMap = nullptr;
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	assert(SUCCEEDED(result));
-	memcpy(vertMap, vertices, sizeof(vertices));
+	memcpy(vertMap, vertices.data(), sizeof(vertices));
 	vertBuff->Unmap(0, nullptr);
 
 	//ワールド行列の更新
@@ -178,7 +178,6 @@ void Sprite::NoPipelineDraw(const std::string& name, const XMFLOAT2& position, c
 
 void Sprite::SpriteSetTextureRect(const std::string & name, const float & tex_x, const float & tex_y, const float & tex_width, const float & tex_height)
 {
-	HRESULT result;
 
 	D3D12_RESOURCE_DESC resDesc = Texture::GetTexBuff(name).Get()->GetDesc();
 

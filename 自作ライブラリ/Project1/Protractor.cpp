@@ -44,21 +44,21 @@ Protractor::~Protractor()
 
 	for (int i = 0; i < 8; i++)
 	{
-		Vector3 position = colliderOffset[i];
+		Vector3 position = colliderOffset[i].data();
 		std::string write = "offset ";
 		write += std::to_string(position.x) + "f, " + std::to_string(position.y) + "f, " + std::to_string(position.z) + "f,\n";
 		file.write(write.c_str(), write.length());
 	}
 	for (int i = 0; i < 8; i++)
 	{
-		Vector3 scale = colliderScale[i];
+		Vector3 scale = colliderScale[i].data();
 		std::string write = "scale ";
 		write += std::to_string(scale.x) + "f, " + std::to_string(scale.y) + "f, " + std::to_string(scale.z) + "f,\n";
 		file.write(write.c_str(), write.length());
 	}
 	for (int i = 0; i < 8; i++)
 	{
-		Vector3 rot = colliderRotation[i];
+		Vector3 rot = colliderRotation[i].data();
 		std::string write = "rotation ";
 		write += std::to_string(rot.x) + "f, " + std::to_string(rot.y) + "f, " + std::to_string(rot.z) + "f,\n";
 		file.write(write.c_str(), write.length());
@@ -102,11 +102,11 @@ void Protractor::Draw()
 		std::string name2 = "colliderScale" + std::to_string(i);
 		std::string name3 = "colliderRotation" + std::to_string(i);
 
-		ImGui::SliderFloat3(name.c_str(), colliderOffset[i], -5, 5);
+		ImGui::SliderFloat3(name.c_str(), colliderOffset[i].data(), -5, 5);
 		colliders[i]->SetOffset({ colliderOffset[i][0],colliderOffset[i][1],colliderOffset[i][2] });
-		ImGui::SliderFloat3(name2.c_str(), colliderScale[i], 0, 5);
+		ImGui::SliderFloat3(name2.c_str(), colliderScale[i].data(), 0, 5);
 		colliders[i]->SetScale({ colliderScale[i][0],colliderScale[i][1],colliderScale[i][2] });
-		ImGui::SliderFloat3(name3.c_str(), colliderRotation[i], 0, 360);
+		ImGui::SliderFloat3(name3.c_str(), colliderRotation[i].data(), 0, 360);
 		colliders[i]->SetRotation({ colliderRotation[i][0],colliderRotation[i][1],colliderRotation[i][2] });
 	}
 	ImGui::End();

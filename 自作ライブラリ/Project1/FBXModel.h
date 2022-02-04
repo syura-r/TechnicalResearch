@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include<string>
 #include<DirectXMath.h>
 #include"Model.h"
@@ -121,7 +122,7 @@ public://メンバ関数
 	static const int MAX_BONES = 32;
 	struct ConstBufferDataSkin
 	{
-		XMMATRIX bones[MAX_BONES];
+		std::array<XMMATRIX,MAX_BONES> bones;
 	};
 	void AddAnimation(const std::string& animationName, const int startFrame, const int endFrame);
 	const AnimationTime& GetAnimation(const std::string& animationName);
@@ -160,8 +161,8 @@ private:
 	float motionBlendTime = 7.0f;
 	float lerpTime = 0.0f;
 	//EvaluateGlobalTransform関数が遅いからモーションブレンド用にボーン配列を二つ用意
-	FbxAMatrix blendStartBorn[MAX_BONES];
-	FbxAMatrix blendEndBorn[MAX_BONES];
+	std::array<FbxAMatrix, MAX_BONES> blendStartBorn;
+	std::array<FbxAMatrix, MAX_BONES> blendEndBorn;
 
 
 public://サブクラス
@@ -171,8 +172,8 @@ public://サブクラス
 		XMFLOAT3 pos;	 //位置
 		XMFLOAT3 normal;//法線ベクトル
 		XMFLOAT2 uv;    //uv座標
-		UINT boneIndex[MAX_BONE_INDICES];//番号
-		float boneWeight[MAX_BONE_INDICES];//重み
+		std::array<UINT, MAX_BONE_INDICES> boneIndex;//番号
+		std::array<float, MAX_BONE_INDICES> boneWeight;//重み
 	};
 
 	//メッシュを持つノード

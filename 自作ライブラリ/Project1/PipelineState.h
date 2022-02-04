@@ -81,8 +81,6 @@ private:
 
 	static void CompileShader(const std::string& shaderName, ComPtr < ID3DBlob>& shaderBlob, ComPtr < ID3DBlob>& errorBlob, const SHADER shaderType);
 	static void SetVSLayout(const LPCSTR& semantics, std::vector<D3D12_INPUT_ELEMENT_DESC>& arg_layouts, const DXGI_FORMAT& format);
-	//static void SetDescriptorRange(std::vector<CD3DX12_ROOT_PARAMETER>& arg_rootparams, const int num, std::vector<CD3DX12_DESCRIPTOR_RANGE*>& arg_descRangeSRVs);
-	//static void SetConstantBufferView(std::vector<CD3DX12_ROOT_PARAMETER>& arg_rootparams, const int num);
 	static void SetDescriptorConstantBuffer(std::vector<CD3DX12_ROOT_PARAMETER>& arg_rootparams, const int arg_constBuffNum, const int arg_descriptorNum, std::vector<CD3DX12_DESCRIPTOR_RANGE*>& arg_descRangeSRVs);
 };
 

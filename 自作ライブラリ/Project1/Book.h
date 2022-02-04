@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+
 #include "BoxCollider.h"
 #include "GSShaderTestObj.h"
 class Book :
@@ -11,15 +13,15 @@ public:
 private:
 	std::vector<std::unique_ptr<BoxCollider>> colliders;
 
-	float colliderOffset[3] =
+	std::array<float,3> colliderOffset =
 	{
 		0 , 1.5f , 0,
 	};
-	float colliderScale[3]
+	std::array<float, 3> colliderScale = 
 	{
 		1.179f , 1.5f , 0.534f,
 	};
-	float colliderRotation[3]
+	std::array<float, 3> colliderRotation = 
 	{
 		0 , 0 , 0,
 	};

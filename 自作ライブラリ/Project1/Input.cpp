@@ -7,8 +7,8 @@ ComPtr<IDirectInputDevice8> Input::devkeyboard = nullptr;
 ComPtr<IDirectInputDevice8> Input::devPad = nullptr;
 ComPtr<IDirectInputDevice8> Input::devMouse = nullptr;
 
-BYTE Input::keys[256] = {};
-BYTE Input::prevKeys[256] = {};
+std::array<BYTE, 256> Input::keys = {};
+std::array<BYTE, 256> Input::prevKeys = {};
 DIMOUSESTATE2 Input::mouseState = {};
 DIMOUSESTATE2 Input::mouseStatePre = {};
 int Input::num = 0;//パッドの初期化に使用
@@ -200,13 +200,13 @@ void Input::Update()
 	result = devkeyboard->Acquire();
 	//assert(SUCCEEDED(result));
 
-	memcpy(prevKeys, keys, sizeof(keys));
+	memcpy(prevKeys.data(), keys.data(), sizeof(keys));
 	//for (int i = 0; i < 256; i++)
 	//{
 	//	prevKeys[i] = keys[i];
 	//}
 	//全キーの入力状態を取得する
-	result = devkeyboard->GetDeviceState(sizeof(keys), keys);
+	result = devkeyboard->GetDeviceState(sizeof(keys), keys.data());
 	//assert(SUCCEEDED(result));
 
 	//マウス

@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include<forward_list>
 #include"CollisionPrimitive.h"
 #include"RaycastHit.h"
@@ -72,11 +73,11 @@ private:
 
 	bool viewCollider;
 	const int vertexCount = 500;
-	ComPtr<ID3D12Resource> boxVertBuff[3];
-	D3D12_VERTEX_BUFFER_VIEW boxVbView[3];
-	ComPtr<ID3D12Resource> constBuff[3];
-	ComPtr<ID3D12Resource> sphereVertBuff[3];
-	D3D12_VERTEX_BUFFER_VIEW sphereVbView[3];
+	std::array<ComPtr<ID3D12Resource>,3> boxVertBuff;
+	std::array<D3D12_VERTEX_BUFFER_VIEW, 3> boxVbView;
+	std::array<ComPtr<ID3D12Resource>, 3> constBuff;
+	std::array<ComPtr<ID3D12Resource>, 3> sphereVertBuff;
+	std::array<D3D12_VERTEX_BUFFER_VIEW, 3> sphereVbView;
 	struct BoxVBData
 	{
 		XMFLOAT3 center;

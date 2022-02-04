@@ -27,13 +27,13 @@ Goal::Goal()
 	object->Update();
 	for (int i = 0; i < 3; i++)
 	{
-		colliders[i] = new BoxCollider({ 0, 0.5f, 0,0 }, { 0.25f,0.5f,0.25f });
-		colliders[i]->SetRotation({ 0,30.0f * i,0 });
-		colliders[i]->SetObject(this);
-		colliders[i]->SetAttribute(COLLISION_ATTR_GOAL);
-		colliders[i]->Update();
-		CollisionManager::GetInstance()->AddCollider(colliders[i]);
-
+		std::unique_ptr<BoxCollider> col(new BoxCollider({ 0, 0.5f, 0,0 }, { 0.25f,0.5f,0.25f }));
+		col->SetRotation({ 0,30.0f * i,0 });
+		col->SetObject(this);
+		col->SetAttribute(COLLISION_ATTR_GOAL);
+		col->Update();
+		CollisionManager::GetInstance()->AddCollider(col.get());
+		colliders[i].swap(std::move(col));
 	}
 	Initialize();
 }

@@ -229,7 +229,7 @@
     <ClCompile Include="PlaneCollider.cpp" />
     <ClCompile Include="Play.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PostEffect.cpp" />
+    <ClCompile Include="Bloom.cpp" />
     <ClCompile Include="Protractor.cpp" />
     <ClCompile Include="Quaternion.cpp" />
     <ClCompile Include="Result.cpp" />
@@ -272,7 +272,6 @@
     <ClInclude Include="Chair.h" />
     <ClInclude Include="CircleShadow.h" />
     <ClInclude Include="CleaningToolStorage.h" />
-    <ClInclude Include="ColliderEditor.h" />
     <ClInclude Include="Collision.h" />
     <ClInclude Include="CollisionAttribute.h" />
     <ClInclude Include="CollisionInfo.h" />
@@ -331,7 +330,7 @@
     <ClInclude Include="Play.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PointLight.h" />
-    <ClInclude Include="PostEffect.h" />
+    <ClInclude Include="Bloom.h" />
     <ClInclude Include="Protractor.h" />
     <ClInclude Include="PtrDelete.h" />
     <ClInclude Include="Quaternion.h" />

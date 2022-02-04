@@ -91,6 +91,22 @@ void Player::Initialize()
 	disappearCounter = 0;
 	resetMoveCounter = 0;
 	camera->SetTarget(position + Vector3{ 0, 1, 0 });
+	camera->Update();
+	//----------ƒJƒƒ‰‚Ì‰ñ“]Šp“x‚ðŽZo---------------
+	XMMATRIX camMatWorld = XMMatrixInverse(nullptr, camera->GetMatView());
+	const Vector3 cameraDirectionZ = Vector3(camMatWorld.r[2].m128_f32[0], 0, camMatWorld.r[2].m128_f32[2]).Normalize();
+	float cosA = Vector3(0, 0, 1).Dot(cameraDirectionZ);
+	if (cosA > 1.0f)
+		cosA = 1.0f;
+	else if (cosA < -1.0f)
+		cosA = -1.0f;
+	float rad = acos(cosA);
+	const Vector3 CrossVec = Vector3(0, 0, 1).Cross(cameraDirectionZ);
+	if (CrossVec.y < 0)
+		rad *= -1;
+	//-----------------------------------------------
+	//ƒJƒƒ‰‚Ì‰ñ“]
+	camera->AddPhi(rad);
 }
 
 void Player::Update()

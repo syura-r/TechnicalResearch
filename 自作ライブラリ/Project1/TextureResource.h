@@ -18,7 +18,7 @@ public:
 	void DepthClear();
 private:
 	void Initialize(const std::string& name);
-	Microsoft::WRL::ComPtr<ID3D12Resource> resource[3];
+	std::array < Microsoft::WRL::ComPtr<ID3D12Resource>,3> resource;
 	Microsoft::WRL::ComPtr <ID3D12Resource> depthBuffer;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvHeap;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> peraRTVHeap;//レンダーターゲット用
@@ -26,7 +26,7 @@ private:
 	ID3D12GraphicsCommandList* cmdList;
 	ID3D12Device* dev;
 	DXGI_FORMAT format;
-	float clearColor[4] = {};
+	std::array<float,4> clearColor;
 	int resourceWidth;
 	int resourceHeight;
 	UINT numRTD = 1;

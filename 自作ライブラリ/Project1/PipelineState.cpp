@@ -1,6 +1,6 @@
 #include "PipelineState.h"
 #include <d3dcompiler.h>
-#include"PtrDelete.h";
+#include"PtrDelete.h"
 std::unordered_map<std::string, ComPtr<ID3D12RootSignature>> PipelineState::rootsignature = {};
 std::unordered_map<std::string, D3D_PRIMITIVE_TOPOLOGY > PipelineState::primitiveTopologies = {};
 

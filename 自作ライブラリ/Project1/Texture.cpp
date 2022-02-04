@@ -138,8 +138,6 @@ void Texture::AddTexture(const std::string& name, ID3D12Resource* texBuff)
 {
 	if (texbuffs[name] != nullptr)
 		assert(0);
-
-	HRESULT result;
 	auto dev = DirectXLib::GetInstance()->GetDevice();
 
 	texbuffs[name] = texBuff;

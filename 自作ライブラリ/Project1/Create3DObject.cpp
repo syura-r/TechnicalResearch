@@ -695,7 +695,6 @@ void Create3DObject::DrawBox(XMFLOAT4 color,ID3D12PipelineState * pipelinestate,
 
 void Create3DObject::Move()
 {
-	HRESULT result;
 	//if (input->DownKey(DIK_UP))
 	//{
 	//	position.y += 1.0f;

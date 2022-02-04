@@ -23,7 +23,7 @@ public:
 	void PreDraw()override;
 	void PostDraw()override;
 private:
-	const float lightPos[9][3] =
+	const std::array<std::array<float,3>,9> lightPos =
 	{
 		-6.000f,19.404f,2.137f,
 		-6.000f,19.404f,30.627f,

@@ -14,7 +14,7 @@ public:
 	void OnCollision(const CollisionInfo& info) override;
 private:
 	std::vector<BoxCollider*> colliders;
-	float colliderOffset[8][3] =
+	std::array<std::array<float, 3>, 8> colliderOffset = 
 	{
 		-0.77f , 0.96f , 0.788f,
 		-0.007f, 1.96f , 0.048f,
@@ -25,7 +25,7 @@ private:
 		-0.799f, 2.623f, -0.828f,
 		-0.866f, 0.984f, -0.860f,
 	};
-	float colliderScale[8][3]
+	std::array<std::array<float, 3>, 8> colliderScale =
 	{
 		0.133f , 0.933f , 0.10f,
 		0.856f , 0.090f , 0.766f,
@@ -36,7 +36,7 @@ private:
 		0.148f , 0.566f , 0.090f,
 		0.090f , 0.971f , 0.090f,
 	};
-	float colliderRotation[8][3]
+	std::array<std::array<float, 3>, 8> colliderRotation =
 	{
 		-4.4f , 0 , 0,
 		0 , 0 , 0,

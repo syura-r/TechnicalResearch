@@ -1,4 +1,5 @@
 #pragma once
+#include <array>
 #include<DirectXMath.h>
 #include<d3d12.h>
 #include <wrl.h>
@@ -34,11 +35,11 @@ public:
 	{
 		XMFLOAT3 ambientColor;
 		float pad;//パディング
-		DirectionalLight::ConstBuff dirLights[DirLightNum];
-		PointLight::ConstBuff pointLights[PointLightNum];
-		SpotLight::ConstBuff spotLights[SpotLightNum];
+		std::array<DirectionalLight::ConstBuff,DirLightNum> dirLights;
+		std::array<PointLight::ConstBuff, PointLightNum> pointLights;
+		std::array<SpotLight::ConstBuff, SpotLightNum> spotLights;
 		//丸影用
-		CircleShadow::ConstBuff circleShadows[CircleShadowNum];
+		std::array<CircleShadow::ConstBuff, CircleShadowNum> circleShadows;
 	};
 public://静的メンバ関数
 
@@ -80,13 +81,13 @@ private://メンバ変数
 
 	XMFLOAT3 ambientColor{ 1,1,1 };
 	//平行光源の配列
-	DirectionalLight dirLights[DirLightNum];
+	std::array<DirectionalLight, DirLightNum> dirLights;
 	//点光源の配列
-	PointLight pointLights[PointLightNum];
+	std::array<PointLight, PointLightNum> pointLights;
 	//スポットライトの配列
-	SpotLight spotLights[SpotLightNum];
+	std::array<SpotLight, SpotLightNum> spotLights;
 	//丸影の配列
-	CircleShadow circleShadows[CircleShadowNum];
+	std::array<CircleShadow, CircleShadowNum> circleShadows;
 	bool dirty = false;
 
 };

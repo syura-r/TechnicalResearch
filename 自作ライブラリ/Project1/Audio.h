@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+
 #include"XAudio2VoiceCallback.h"
 #include<cstdint>
 #include<wrl.h>
@@ -10,7 +12,7 @@ using namespace Microsoft::WRL;
 //チャンクヘッダ
 struct Chunk
 {
-	char id[4];//チャンクごとのID
+	std::array<char, 4> id;;//チャンクごとのID
 	int32_t size;//チャンクサイズ
 };
 
@@ -18,7 +20,7 @@ struct Chunk
 struct RiffHeader
 {
 	Chunk chunk;//"RIFF"
-	char type[4];//"WAVE"
+	std::array<char, 4> type;//"WAVE"
 };
 
 //FMTチャンク

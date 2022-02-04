@@ -1,5 +1,5 @@
 #pragma once
-#include<DirectXMath.h>
+#include <array>
 
 #include "Camera.h"
 #include"Vector.h"
@@ -40,7 +40,7 @@ struct Box
 {
 	//’†SÀ•W
 	DirectX::XMVECTOR center = {};
-	DirectX::XMVECTOR normaDirect[3] = {{},{},{}};
+	std::array<DirectX::XMVECTOR, 3> normaDirect;
 	//float fLength[3] = {};
 	//‘å‚«‚³
 	Vector3 scale = { 1,1,1 };
@@ -75,7 +75,7 @@ class Frustum
 	};
 	struct FrustumPlanes
 	{
-		FrustumPlane plane[6];
+		std::array<FrustumPlane, 6> plane;
 	};
 private:
 	FrustumPlanes planes;

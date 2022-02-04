@@ -34,7 +34,7 @@ ShadowMap::ShadowMap()
 	result = vertBuff->Map(0, nullptr, (void**)&vertMap);
 	if (SUCCEEDED(result))
 	{
-		memcpy(vertMap, vertices, sizeof(vertices));
+		memcpy(vertMap, vertices.data(), sizeof(vertices));
 		vertBuff->Unmap(0, nullptr);
 	}
 

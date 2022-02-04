@@ -82,7 +82,6 @@ bool Object3D::Initialize()
 
 void Object3D::Update(const BILLBOARD_TYPE billboardType)
 {
-	HRESULT result;
 	XMMATRIX matScale, matRot, matTrans;
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	matRot = XMMatrixIdentity();
@@ -122,7 +121,6 @@ void Object3D::Update(const BILLBOARD_TYPE billboardType)
 
 void Object3D::WorldUpdate(const Vector3& rot,const BILLBOARD_TYPE billboardType)
 {
-	HRESULT result;
 	XMMATRIX matScale, matTrans, matRot;
 	matScale = XMMatrixScaling(scale.x, scale.y, scale.z);
 	XMMATRIX camMatWorld = XMMatrixInverse(nullptr, camera->GetMatView());
