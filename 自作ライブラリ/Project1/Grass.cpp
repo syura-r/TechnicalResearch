@@ -18,7 +18,6 @@ Grass::Grass()
 	time = 0;
 }
 
-
 void Grass::Draw()
 {
 	auto cmdList = DirectXLib::GetInstance()->GetCommandList();
@@ -88,7 +87,6 @@ void Grass::Draw()
 	cmdList->SetGraphicsRootDescriptorTable(4, Texture::GetGpuDescHandleSRV("shadowMap" + std::to_string(bbIndex)));  //ヒープの先頭が定数バッファ
 
 	CustomDraw(false, false,ALPHA,true);
-
 	
 }
 

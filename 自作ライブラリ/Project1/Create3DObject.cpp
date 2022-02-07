@@ -695,46 +695,6 @@ void Create3DObject::DrawBox(XMFLOAT4 color,ID3D12PipelineState * pipelinestate,
 
 void Create3DObject::Move()
 {
-	//if (input->DownKey(DIK_UP))
-	//{
-	//	position.y += 1.0f;
-	//}
-	//else if (input->DownKey(DIK_DOWN))
-	//{
-	//	position.y -= 1.0f;
-	//}
-	////À•W‚ðˆÚ“®‚·‚éˆ—(XÀ•W)
-	//if (input->DownKey(DIK_RIGHT))
-	//{
-	//	position.x += 1.0f;
-	//}
-	//else if (input->DownKey(DIK_LEFT))
-
-	//{
-	//	position.x -= 1.0f;
-	//}
-
-	//if (input->DownKey(DIK_W))
-	//{
-	//	rotation.x += 2;
-	//}
-	//else if (input->DownKey(DIK_S))
-	//{
-	//	rotation.x -= 2;
-	//}
-	//if (input->DownKey(DIK_D))
-	//{
-	//	rotation.y += 2;
-	//}
-	////if (input->DownPad(JOY_BUTTON1))
-	////{
-	////	rotation.y += 2;
-	////}
-
-	//else if (input->DownKey(DIK_A))
-	//{
-	//	rotation.y -= 2;
-	//}
 	matRot = XMMatrixIdentity();
 	matRot *= XMMatrixRotationZ(XMConvertToRadians(rotation.z));//zŽ²Žü‚è‚É‰ñ“]
 	matRot *= XMMatrixRotationX(XMConvertToRadians(rotation.x));//xŽ²Žü‚è‚É‰ñ“]

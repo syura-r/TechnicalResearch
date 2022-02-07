@@ -288,7 +288,7 @@ void PipelineState::CreatePipeline(const std::string& keyName, const ShaderType 
 			
 		primitiveTopologies[keyName] = D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
-		SetDescriptorConstantBuffer(rootparams, 1, 2, descRangeSRVs);
+		SetDescriptorConstantBuffer(rootparams, 1, 6, descRangeSRVs);
 
 		rootSignatureDesc.Init_1_0(rootparams.size(), rootparams.data(), 1, &samplerDesc, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 

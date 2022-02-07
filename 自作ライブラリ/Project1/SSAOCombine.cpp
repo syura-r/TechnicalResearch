@@ -75,7 +75,10 @@ void SSAOCombine::Draw()
 	//インデックスバッファのセットコマンド
 	cmdList->SetGraphicsRootDescriptorTable(1, Texture::GetGpuDescHandleSRV("mainTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
 	cmdList->SetGraphicsRootDescriptorTable(2, Texture::GetGpuDescHandleSRV("SSAO" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
-
+	cmdList->SetGraphicsRootDescriptorTable(3, Texture::GetGpuDescHandleSRV("normalTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
+	cmdList->SetGraphicsRootDescriptorTable(4, Texture::GetGpuDescHandleSRV("depthTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
+	cmdList->SetGraphicsRootDescriptorTable(5, Texture::GetGpuDescHandleSRV("halfNormalTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
+	cmdList->SetGraphicsRootDescriptorTable(6, Texture::GetGpuDescHandleSRV("halfDepthTex" + std::to_string(DirectXLib::GetInstance()->GetBbIndex())));  //ヒープの先頭が定数バッファ
 	cmdList->DrawInstanced(4, 1, 0, 0);
 
 
